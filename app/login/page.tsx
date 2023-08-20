@@ -42,8 +42,8 @@ const Login = () => {
     }
   };
   return (
-    <section className="relative bg-[#e7e6e6] flex justify-center items-center h-[100vh] w-full">
-      <div className="w-[35%] bg-white shadow-md px-7 py-5">
+    <section className="relative bg-[#f6f9fc] flex justify-center items-center h-[100vh] w-full">
+      <div className="w-[35%] bg-white shadow-lg border rounded-md px-7 py-5">
         <p className="text-xl font-semibold text-center mb-6">
           Login - Admin Panel
         </p>

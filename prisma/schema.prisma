@@ -38,16 +38,24 @@ model User {
 
 
 model Product {
-  id                      String     @id @default(uuid())
-  product_name            String 
+  id                      String      @id @default(uuid())
+  product_name            String
   product_description     String
   price                   Int
   quantity                Int
-  image                   String     
-  createdAt               DateTime   @default(now())
-  updatedAt               DateTime   @updatedAt()
-  carts                   Cart[]    
-  orders                  Order[]   
+  image                   String
+  createdAt               DateTime    @default(now())
+  updatedAt               DateTime    @updatedAt()
+  Category                Category @relation(fields: [category], references: [id])
+  category                String
+  carts                   Cart[]
+  orders                  Order[]
+}
+
+model Category {
+  id                      String      @id @default(uuid())
+  name                    String      @unique
+  products                Product[]
 }
 
 model Cart {
