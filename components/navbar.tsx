@@ -17,18 +17,16 @@ const Navbar = () => {
   const router = useRouter();
   return (
     <div className="borber-b w-full bg-white relative shadow-md px-6 py-3 flex justify-between items-center">
-      <p
+      <div
         className="font-semibold text-xl cursor-pointer flex justify-center items-center"
         onClick={() => router.replace("/")}
       >
         <Store className="mr-2 h-6 w-6" /> Ecommercely
-      </p>
+      </div>
       <div className="flex justify-center items-center">
         <Sheet>
           <SheetTrigger>
-            <Button className="mr-4" variant={"ghost"}>
-              <ShoppingCart className="h-6 w-6" />
-            </Button>
+            <ShoppingCart className="h-6 w-6 mr-4" />
           </SheetTrigger>
           <SheetContent>
             <SheetHeader>
@@ -39,7 +37,6 @@ const Navbar = () => {
             </SheetHeader>
           </SheetContent>
         </Sheet>
-
         <Avatar className="cursor-pointer">
           <AvatarImage src="https://github.com/shadcn.png" />
           <AvatarFallback>CN</AvatarFallback>

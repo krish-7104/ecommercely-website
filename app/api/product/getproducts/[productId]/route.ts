@@ -1,7 +1,7 @@
 import prismadb from "@/lib/prismadb";
 import { NextResponse } from "next/server";
 
-export async function GET(
+export async function POST(
   req: Request,
   context: { params: { productId: string } }
 ) {

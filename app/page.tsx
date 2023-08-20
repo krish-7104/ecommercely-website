@@ -6,7 +6,9 @@ import { Separator } from "@/components/ui/separator";
 import { toast } from "react-hot-toast";
 import axios from "axios";
 import { Button } from "@/components/ui/button";
+import { useRouter } from "next/navigation";
 const Home = () => {
+  const navigate = useRouter();
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   useEffect(() => {
@@ -29,8 +31,8 @@ const Home = () => {
     }
   };
   return (
-    <section className="min-h-[100vh] w-full flex bg-[#f6f9fc] flex-col items-center">
-      <div className="w-[90%] mb-6">
+    <main className="min-h-[100vh] w-full flex bg-[#f6f9fc] flex-col items-center">
+      <section className="w-[90%] mb-6">
         <div className="w-full my-10 flex justify-center">
           <Image
             src={require("../public/homeImage.png")}
@@ -52,6 +54,7 @@ const Home = () => {
                   <div
                     key={product.id}
                     className="bg-white shadow-md rounded-lg px-4 py-6 cursor-pointer overflow-hidden flex flex-col justify-between"
+                    onClick={() => navigate.push(`/product/${product.id}`)}
                   >
                     <Image
                       src={product.image}
@@ -76,8 +79,8 @@ const Home = () => {
               })}
           </div>
         </div>
-      </div>
-    </section>
+      </section>
+    </main>
   );
 };
 
