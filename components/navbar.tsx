@@ -13,8 +13,10 @@ import {
 } from "@/components/ui/sheet";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { useSelector } from "react-redux";
 
 const Navbar = () => {
+  const userData = useSelector((state: any) => state.userData);
   const [search, setSearch] = useState("");
   const router = useRouter();
   return (
@@ -51,8 +53,10 @@ const Navbar = () => {
           </SheetContent>
         </Sheet>
         <Avatar className="cursor-pointer">
-          <AvatarImage src="https://github.com/shadcn.png" />
-          <AvatarFallback>CN</AvatarFallback>
+          <AvatarFallback>
+            {userData?.name?.split(" ")[0].slice(0, 1)}
+            {userData?.name?.split(" ")[1].slice(0, 1)}
+          </AvatarFallback>
         </Avatar>
       </div>
     </div>

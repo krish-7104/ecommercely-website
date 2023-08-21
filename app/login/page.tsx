@@ -15,7 +15,7 @@ import {
 import { Input } from "@/components/ui/input";
 import axios from "axios";
 import { useRouter } from "next/navigation";
-import { toast } from "react-hot-toast/headless";
+import toast from "react-hot-toast";
 import { useDispatch } from "react-redux";
 import { setUserData } from "@/redux/actions";
 
@@ -37,9 +37,9 @@ const Login = () => {
     toast.loading("Logging In..");
     try {
       const resp = await axios.post("/api/auth/login", values);
-      toast.dismiss();
       toast.success("Login Successfull");
       dispatch(setUserData(resp.data.user));
+      toast.dismiss();
       router.replace("/");
     } catch (error: any) {
       toast.dismiss();
