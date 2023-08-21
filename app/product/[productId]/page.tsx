@@ -33,7 +33,7 @@ const Product = () => {
       console.log(resp.data);
       toast.dismiss();
     } catch (error: any) {
-      setProduct();
+      setProduct(undefined);
       setLoading(false);
       toast.dismiss();
       toast.error("Something Went Wrong!");
@@ -42,15 +42,15 @@ const Product = () => {
   return (
     <main className="min-h-[100vh] w-full flex bg-[#f6f9fc] flex-col items-center">
       {!loading && product && (
-        <section className="w-[90%] my-6 flex justify-between items-center">
+        <section className="w-[90%] my-6 flex justify-between items-start">
           <Image
             src={product.image}
             alt="product"
             width={450}
             height={450}
-            className="mr-10"
+            className="mr-10 w-[30%]"
           />
-          <div>
+          <div className="w-[70%]">
             <p className="font-semibold text-xl mb-2">{product.product_name}</p>
             <p className="mb-4">{product.product_description}</p>
             <p className="font-semibold text-xl mb-4">₹{product.price}</p>
