@@ -50,6 +50,8 @@ model Product {
   category                String
   carts                   Cart[]
   orders                  Order[]
+  visible                 Boolean?    @default(true)
+  featured                Boolean?    @default(false)
 }
 
 model Category {

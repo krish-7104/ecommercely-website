@@ -55,10 +55,10 @@ const Product = () => {
             <p className="mb-4">{product.product_description}</p>
             <p className="font-semibold text-xl mb-4">₹{product.price}</p>
             <div className="flex">
-              <Button variant={"secondary"} className="mr-4">
+              <Button>Buy Now</Button>
+              <Button variant={"secondary"} className="ml-4">
                 Add To Cart
               </Button>
-              <Button>Buy Now</Button>
             </div>
           </div>
         </section>
