@@ -1,26 +1,42 @@
 import { NextResponse } from "next/server";
 import jwt from "jsonwebtoken";
 import prismadb from "@/lib/prismadb";
+var bcrypt = require("bcryptjs");
 
 export async function POST(req: Request) {
   try {
     const body = await req.json();
-    const { email, password, action } = body;
+    const { email, password } = body;
 
     const user = await prismadb.user.findUnique({
       where: { email },
     });
 
-    if (!user || user.password !== password) {
+    if (!user) {
       return new NextResponse("Invalid credentials", { status: 401 });
     }
 
-    const token = jwt.sign({ userId: user.id }, process.env.SECRET_KEY, {
-      expiresIn: "2h",
-    });
+    const passwordMatch = await bcrypt.compare(password, user.password);
+
+    if (!passwordMatch) {
+      return new NextResponse("Invalid credentials", { status: 401 });
+    }
+
+    const token = jwt.sign(
+      { userId: user.id },
+      process.env.SECRET_KEY || "HelloKey",
+      {
+        expiresIn: "24h",
+      }
+    );
+
+    const modifiedUser = { name: user.name, email: user.email, id: user.id };
 
     const response = new NextResponse(
-      JSON.stringify({ message: "Successfully logged in" })
+      JSON.stringify({
+        message: "Successfully logged in",
+        user: { ...modifiedUser },
+      })
     );
 
     response.headers.set(

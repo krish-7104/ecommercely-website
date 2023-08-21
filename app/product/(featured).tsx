@@ -1,10 +1,9 @@
 "use client";
 import ProductCard from "@/components/product-card";
-import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import axios from "axios";
 import { Activity } from "lucide-react";
-import Image from "next/image";
+import { Skeleton } from "@/components/ui/skeleton";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import { toast } from "react-hot-toast";
@@ -14,6 +13,8 @@ interface Product {
   image: string;
   product_name: string;
   price: number;
+  visible: Boolean;
+  featured: Boolean;
 }
 
 const Featured = () => {
@@ -50,8 +51,33 @@ const Featured = () => {
         {!loading &&
           products &&
           products.map((product: Product) => {
-            return <ProductCard key={product.id} product={product} />;
+            if (product.visible && product.featured)
+              return <ProductCard key={product.id} product={product} />;
           })}
+        {loading && (
+          <>
+            <div className="bg-white shadow-md rounded-lg px-4 py-6 cursor-pointer overflow-hidden flex flex-col justify-between items-center">
+              <Skeleton className="h-[220px] w-[200px] mb-4" />
+              <Skeleton className="h-4 w-[250px] mb-4" />
+              <Skeleton className="h-4 w-[250px] mb-4" />
+            </div>
+            <div className="bg-white shadow-md rounded-lg px-4 py-6 cursor-pointer overflow-hidden flex flex-col justify-between items-center">
+              <Skeleton className="h-[220px] w-[200px] mb-4" />
+              <Skeleton className="h-4 w-[250px] mb-4" />
+              <Skeleton className="h-4 w-[250px] mb-4" />
+            </div>
+            <div className="bg-white shadow-md rounded-lg px-4 py-6 cursor-pointer overflow-hidden flex flex-col justify-between items-center">
+              <Skeleton className="h-[220px] w-[200px] mb-4" />
+              <Skeleton className="h-4 w-[250px] mb-4" />
+              <Skeleton className="h-4 w-[250px] mb-4" />
+            </div>
+            <div className="bg-white shadow-md rounded-lg px-4 py-6 cursor-pointer overflow-hidden flex flex-col justify-between items-center">
+              <Skeleton className="h-[220px] w-[200px] mb-4" />
+              <Skeleton className="h-4 w-[250px] mb-4" />
+              <Skeleton className="h-4 w-[250px] mb-4" />
+            </div>
+          </>
+        )}
       </div>
     </div>
   );

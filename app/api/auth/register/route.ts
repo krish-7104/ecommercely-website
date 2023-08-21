@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import prismadb from "@/lib/prismadb";
+var bcrypt = require("bcryptjs");
 
 export async function POST(req: Request) {
   try {
@@ -10,11 +11,13 @@ export async function POST(req: Request) {
       where: { email },
     });
 
+    const hashedPassword = await bcrypt.hash(password, 10);
+
     if (!user) {
       const newUser = await prismadb.user.create({
         data: {
           email,
-          password,
+          password: hashedPassword,
           name,
         },
       });

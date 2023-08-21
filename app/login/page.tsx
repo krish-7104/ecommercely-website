@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect } from "react";
+import React from "react";
 import * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -16,8 +16,11 @@ import { Input } from "@/components/ui/input";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import { toast } from "react-hot-toast/headless";
+import { useDispatch } from "react-redux";
+import { setUserData } from "@/redux/actions";
 
 const Login = () => {
+  const dispatch = useDispatch();
   const router = useRouter();
   const formSchema = z.object({
     email: z.string().nonempty(),
@@ -31,10 +34,12 @@ const Login = () => {
     },
   });
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
+    toast.loading("Logging In..");
     try {
       const resp = await axios.post("/api/auth/login", values);
       toast.dismiss();
       toast.success("Login Successfull");
+      dispatch(setUserData(resp.data.user));
       router.replace("/");
     } catch (error: any) {
       toast.dismiss();
@@ -42,10 +47,10 @@ const Login = () => {
     }
   };
   return (
-    <section className="relative bg-[#f6f9fc] flex justify-center items-center h-[100vh] w-full">
+    <section className="relative bg-[#f6f9fc] flex justify-center items-center h-[88vh] w-full">
       <div className="w-[35%] bg-white shadow-lg border rounded-md px-7 py-5">
         <p className="text-xl font-semibold text-center mb-6">
-          Login - Admin Panel
+          Login - Ecommercely
         </p>
         <Form {...form}>
           <form

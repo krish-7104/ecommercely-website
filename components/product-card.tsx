@@ -23,9 +23,9 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
       <Image
         src={product.image}
         width={200}
-        height={400}
+        height={240}
         alt="product"
-        className="hover:scale-105 transition-all ease-linear duration-150 hover:transition-all hover:ease-linear hover:duration-150"
+        className="hover:scale-105 transition-all ease-linear duration-150 hover:transition-all hover:ease-linear hover:duration-150 max-h-[240px] object-contain"
       />
       <div className="flex flex-col justify-between w-full">
         <p className="my-4 font-medium text-sm">{product.product_name}</p>
