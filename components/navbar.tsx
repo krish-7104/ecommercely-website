@@ -1,7 +1,7 @@
 "use client";
 import { Store, ShoppingCart, Search } from "lucide-react";
 import { useRouter } from "next/navigation";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   Sheet,
@@ -13,9 +13,29 @@ import {
 } from "@/components/ui/sheet";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { setUserData } from "@/redux/actions";
+import axios from "axios";
 
 const Navbar = () => {
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    const getUserTokenData = async () => {
+      const resp = await axios.get("/api/auth/user");
+      dispatch(setUserData(resp.data.user));
+    };
+
+    getUserTokenData();
+  }, [dispatch]);
   const userData = useSelector((state: any) => state.userData);
   const [search, setSearch] = useState("");
   const router = useRouter();
@@ -52,12 +72,38 @@ const Navbar = () => {
             </SheetHeader>
           </SheetContent>
         </Sheet>
-        <Avatar className="cursor-pointer">
-          <AvatarFallback>
-            {userData?.name?.split(" ")[0].slice(0, 1)}
-            {userData?.name?.split(" ")[1].slice(0, 1)}
-          </AvatarFallback>
-        </Avatar>
+        <DropdownMenu>
+          <DropdownMenuTrigger>
+            <Avatar className="cursor-pointer select-none">
+              <AvatarFallback>
+                {userData?.name?.split(" ")[0].slice(0, 1)}
+                {userData?.name?.split(" ")[1].slice(0, 1)}
+              </AvatarFallback>
+            </Avatar>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent className="absolute -right-2">
+            <DropdownMenuLabel>My Account</DropdownMenuLabel>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem
+              className="cursor-pointer"
+              onClick={() => router.push("/profile")}
+            >
+              Profile
+            </DropdownMenuItem>
+            <DropdownMenuItem
+              className="cursor-pointer"
+              onClick={() => router.push("/orders")}
+            >
+              My Orders
+            </DropdownMenuItem>
+            <DropdownMenuItem
+              className="cursor-pointer"
+              onClick={() => router.push("/settings")}
+            >
+              Settings
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
       </div>
     </div>
   );

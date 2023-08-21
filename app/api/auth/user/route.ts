@@ -7,7 +7,6 @@ export async function GET(req: Request) {
   if (!token) {
     return new NextResponse("Unauthorized User", { status: 500 });
   }
-  console.log(token.value);
   try {
     const data = verify(token.value, process.env.SECRET_KEY || "");
     const response = new NextResponse(
