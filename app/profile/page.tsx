@@ -21,9 +21,10 @@ import { useSelector } from "react-redux";
 
 const Account = () => {
   const [data, setData] = useState({
+    id: "",
     name: "",
     email: "",
-    phoneno: 0,
+    phoneno: "",
     address: "",
     city: "",
     pincode: 0,
@@ -44,10 +45,10 @@ const Account = () => {
   const formSchema = z.object({
     name: z.string().nonempty(),
     email: z.string().nonempty(),
-    phoneno: z.coerce.number().max(10),
+    phoneno: z.string().nonempty(),
     address: z.string().nonempty(),
     city: z.string().nonempty(),
-    pincode: z.coerce.number().max(6),
+    pincode: z.coerce.number(),
     state: z.string().nonempty(),
     country: z.string().nonempty(),
   });
@@ -59,7 +60,7 @@ const Account = () => {
   useEffect(() => {
     form.setValue("name", data.name);
     form.setValue("email", data.email);
-    form.setValue("phoneno", data.phoneno ? data.phoneno : 0);
+    form.setValue("phoneno", data.phoneno ? data.phoneno : "");
     form.setValue("address", data.address ? data.address : "");
     form.setValue("city", data.city ? data.city : "");
     form.setValue("pincode", data.pincode ? data.pincode : 0);
@@ -67,9 +68,14 @@ const Account = () => {
     form.setValue("state", data.state ? data.state : "");
   }, [data, form]);
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
+  const onSubmit = async (values: z.infer<typeof formSchema>) => {
     console.log(values);
-  }
+    const updateUser = await axios.put(
+      `/api/profile/update/${data.id}`,
+      values
+    );
+    console.log(updateUser);
+  };
   return (
     <main className="flex w-full justify-center items-center">
       <section className="w-[80%] my-10">
@@ -119,7 +125,7 @@ const Account = () => {
                       Phone Number
                     </FormLabel>
                     <FormControl>
-                      <Input {...field} type="number" />
+                      <Input {...field} type="text" />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
