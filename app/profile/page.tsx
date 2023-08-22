@@ -8,7 +8,6 @@ import { useForm } from "react-hook-form";
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -21,7 +20,16 @@ import axios from "axios";
 import { useSelector } from "react-redux";
 
 const Account = () => {
-  const [data, setData] = useState({});
+  const [data, setData] = useState({
+    name: "",
+    email: "",
+    phoneno: 0,
+    address: "",
+    city: "",
+    pincode: 0,
+    state: "",
+    country: "",
+  });
   const userData = useSelector((state: any) => state.userData);
   useEffect(() => {
     const getUserProfile = async () => {
@@ -29,7 +37,6 @@ const Account = () => {
         id: userData.userId,
       });
       setData(resp.data.user);
-      console.log(resp.data.user);
     };
     userData.userId && getUserProfile();
   }, [userData]);
@@ -37,27 +44,28 @@ const Account = () => {
   const formSchema = z.object({
     name: z.string().nonempty(),
     email: z.string().nonempty(),
-    phoneno: z.number().max(10),
+    phoneno: z.coerce.number().max(10),
     address: z.string().nonempty(),
     city: z.string().nonempty(),
-    pincode: z.number().max(6),
+    pincode: z.coerce.number().max(6),
     state: z.string().nonempty(),
     country: z.string().nonempty(),
   });
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
-    defaultValues: {
-      // name: data.name,
-      // email: data.email,
-      // phoneno: data.phoneno,
-      // address: data.address,
-      // city: data.city,
-      // pincode: data.pincode,
-      // state: data.state,
-      // country: data.country,
-    },
   });
+
+  useEffect(() => {
+    form.setValue("name", data.name);
+    form.setValue("email", data.email);
+    form.setValue("phoneno", data.phoneno ? data.phoneno : 0);
+    form.setValue("address", data.address ? data.address : "");
+    form.setValue("city", data.city ? data.city : "");
+    form.setValue("pincode", data.pincode ? data.pincode : 0);
+    form.setValue("country", data.country ? data.country : "");
+    form.setValue("state", data.state ? data.state : "");
+  }, [data, form]);
 
   function onSubmit(values: z.infer<typeof formSchema>) {
     console.log(values);
@@ -180,7 +188,7 @@ const Account = () => {
                   <FormItem>
                     <FormLabel className="text-slate-800">Address</FormLabel>
                     <FormControl>
-                      <Textarea />
+                      <Textarea {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
