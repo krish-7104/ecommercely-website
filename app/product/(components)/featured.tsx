@@ -2,7 +2,7 @@
 import ProductCard from "@/components/product-card";
 import { Separator } from "@/components/ui/separator";
 import axios from "axios";
-import { Activity } from "lucide-react";
+import { Star } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
@@ -42,9 +42,9 @@ const Featured = () => {
     }
   };
   return (
-    <div>
+    <div className="mb-10">
       <p className="text-xl font-semibold flex items-center">
-        <Activity className="mr-2" />
+        <Star className="mr-2" />
         Featured Products
       </p>
       <Separator className="my-4" />
@@ -53,7 +53,13 @@ const Featured = () => {
           products &&
           products.map((product: Product) => {
             if (product.visible && product.featured)
-              return <ProductCard key={product.id} product={product} />;
+              return (
+                <ProductCard
+                  key={product.id}
+                  product={product}
+                  feature={true}
+                />
+              );
           })}
         {loading && (
           <>

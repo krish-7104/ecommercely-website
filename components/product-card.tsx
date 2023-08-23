@@ -13,13 +13,14 @@ interface Product {
   image: string;
   product_name: string;
   price: number;
-  category: string;
+  category: {};
 }
 
 interface ProductCardProps {
   product: Product;
+  feature: Boolean;
 }
-const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
+const ProductCard: React.FC<ProductCardProps> = ({ product, feature }) => {
   const navigate = useRouter();
   const cartData = useSelector((state: any) => state.cart);
   const userData = useSelector((state: any) => state.userData);
@@ -120,25 +121,27 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
       />
       <div className="flex flex-col justify-between w-full">
         <p
-          className="my-4 font-medium text-sm"
+          className={`${feature ? "mt-4" : "my-4"} font-medium text-sm`}
           onClick={() => navigate.push(`/product/${product.id}`)}
         >
           {product.product_name}
         </p>
-        <div className="flex justify-between items-center">
-          <p className="my-4 font-medium text-right text-lg">
-            ₹{product.price}
-          </p>
-          {existingCartItemIndex === -1 ? (
-            <Button size={"sm"} onClick={addToCartHandler}>
-              Add To Cart
-            </Button>
-          ) : (
-            <Button size={"sm"} onClick={removeFromCartHandler}>
-              Remove From Cart
-            </Button>
-          )}
-        </div>
+        {!feature && (
+          <div className="flex justify-between items-center">
+            <p className="my-4 font-medium text-right text-lg">
+              ₹{product.price}
+            </p>
+            {existingCartItemIndex === -1 ? (
+              <Button size={"sm"} onClick={addToCartHandler}>
+                Add To Cart
+              </Button>
+            ) : (
+              <Button size={"sm"} onClick={removeFromCartHandler}>
+                Remove From Cart
+              </Button>
+            )}
+          </div>
+        )}
       </div>
     </div>
   );

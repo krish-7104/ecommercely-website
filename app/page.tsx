@@ -1,7 +1,8 @@
 "use client";
 import React from "react";
 import Image from "next/image";
-import Featured from "./product/(featured)";
+import Featured from "@/app/product/(components)/featured";
+import Faqs from "@/app/product/(components)/faqs";
 
 const Home = () => {
   return (
@@ -16,6 +17,7 @@ const Home = () => {
           />
         </div>
         <Featured />
+        <Faqs />
       </section>
     </main>
   );
