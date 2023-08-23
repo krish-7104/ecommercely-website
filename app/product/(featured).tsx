@@ -15,6 +15,7 @@ interface Product {
   price: number;
   visible: Boolean;
   featured: Boolean;
+  category: String;
 }
 
 const Featured = () => {

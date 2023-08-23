@@ -1,6 +1,6 @@
 export type InitialState = {
   userData: User | {};
-  cart: Cart | {};
+  cart: Cart;
 };
 
 export type User = {
@@ -20,7 +20,14 @@ export type Action = {
   payload: any;
 };
 
+export type CartProduct = {
+  productId: String;
+  quantity: Number;
+  name: String;
+  price: Number;
+};
+
 export type Cart = {
-  products: Product;
+  products: CartProduct[];
   id: String;
 };

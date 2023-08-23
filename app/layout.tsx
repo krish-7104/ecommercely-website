@@ -1,9 +1,11 @@
+"use client";
 import Navbar from "@/components/navbar";
 import "./globals.css";
 import type { Metadata } from "next";
 import { Montserrat } from "next/font/google";
 import { Toaster } from "react-hot-toast";
 import { Providers } from "@/redux/provider";
+import { usePathname } from "next/navigation";
 const montserrat = Montserrat({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
@@ -16,11 +18,12 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
+  const pathname = usePathname();
   return (
     <html lang="en">
       <body className={montserrat.className}>
         <Providers>
-          <Navbar />
+          {pathname !== "/login" && pathname !== "/register" && <Navbar />}
           {children}
           <Toaster position="bottom-right" />
         </Providers>

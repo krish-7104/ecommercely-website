@@ -12,6 +12,7 @@ const Home = () => {
             src={require("../public/homeImage.png")}
             alt="main image"
             className="h-[300px] object-cover shadow-md rounded-xl"
+            priority
           />
         </div>
         <Featured />

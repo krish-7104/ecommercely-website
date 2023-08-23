@@ -5,7 +5,7 @@ export async function GET(req: Request) {
   const cookieStore = cookies();
   const token = cookieStore.get("token");
   if (!token) {
-    return new NextResponse("Unauthorized User", { status: 500 });
+    return new NextResponse("Unauthorized User", { status: 200 });
   }
   try {
     const data = verify(token.value, process.env.SECRET_KEY || "");
