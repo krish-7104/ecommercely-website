@@ -81,7 +81,12 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
       const sendData = {
         products: updatedCart,
       };
-      createCartInDatabase(sendData);
+      if (cartData.id) {
+        updateCartInDatabase({ ...sendData, id: cartData.id });
+        dispatch(setCartData({ ...sendData, id: cartData.id }));
+      } else {
+        createCartInDatabase(sendData);
+      }
     }
   };
 
