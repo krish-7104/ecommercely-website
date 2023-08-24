@@ -29,23 +29,23 @@ model User {
   country   String?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  carts     Cart[]
+  carts     Cart?
   orders    Order[]
 }
 
 model Product {
-  id                  String   @id @default(uuid())
+  id                  String    @id @default(uuid())
   product_name        String
   product_description String?
   price               Int
   quantity            Int
   image               String?
   createdAt           DateTime? @default(now())
-  updatedAt           DateTime @updatedAt
+  updatedAt           DateTime  @updatedAt
   category            String
-  featured            Boolean? @default(false)
-  visible             Boolean? @default(true)
-  Category            Category @relation(fields: [category], references: [id])
+  featured            Boolean?  @default(false)
+  visible             Boolean?  @default(true)
+  Category            Category  @relation(fields: [category], references: [id])
 }
 
 model Category {
@@ -55,20 +55,20 @@ model Category {
 }
 
 model Cart {
-  id        String    @id @default(uuid())
-  userId    String
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
-  products  Json      
-  user      User      @relation(fields: [userId], references: [id])
+  id        String   @id @default(uuid())
+  userId    String   @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  products  Json
+  user      User     @relation(fields: [userId], references: [id])
 }
 
 model Order {
-  id        String    @id @default(uuid())
+  id        String   @id @default(uuid())
   userId    String
   total     Int
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
-  user      User      @relation(fields: [userId], references: [id])
-  products  Json     
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  products  Json
+  user      User     @relation(fields: [userId], references: [id])
 }

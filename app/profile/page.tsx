@@ -18,6 +18,7 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import axios from "axios";
 import { useSelector } from "react-redux";
+import { toast } from "react-hot-toast";
 
 const Account = () => {
   const [data, setData] = useState({
@@ -69,12 +70,18 @@ const Account = () => {
   }, [data, form]);
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
-    console.log(values);
-    const updateUser = await axios.put(
-      `/api/profile/update/${data.id}`,
-      values
-    );
-    console.log(updateUser);
+    try {
+      toast.loading("Updating Profile");
+      const updateUser = await axios.put(
+        `/api/profile/update/${data.id}`,
+        values
+      );
+      toast.dismiss();
+      toast.success("Profile Updated");
+    } catch (error) {
+      toast.dismiss();
+      toast.error("Somethign Went Wrong!");
+    }
   };
   return (
     <main className="flex w-full justify-center items-center">

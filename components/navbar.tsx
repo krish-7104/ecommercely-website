@@ -61,14 +61,6 @@ const Navbar = () => {
     }
   };
 
-  // const clearCartInDatabase = async (data: any) => {
-  //   try {
-  //     await axios.post(`/api/cart/clear/${cartData.id}`, data);
-  //   } catch (error) {
-  //     toast.error("Error In Clearing Cart!");
-  //   }
-  // };
-
   const incrementCartProduct = (id: String) => {
     const existingCartItemIndex = cartData.products.findIndex(
       (item: CartProduct) => item.productId === id
@@ -131,7 +123,7 @@ const Navbar = () => {
     updateCartInDatabase(sendData);
   };
   return (
-    <div className="borber-b w-full bg-white relative shadow-md px-6 py-3 flex justify-between items-center">
+    <div className="border-b w-full bg-white relative shadow-md px-6 py-3 flex justify-between items-center">
       <div
         className="font-semibold text-xl cursor-pointer flex justify-center items-center"
         onClick={() => router.replace("/")}
