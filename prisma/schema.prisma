@@ -14,6 +14,7 @@ model AdminUser {
   password  String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  Logs      Logs[]
 }
 
 model User {
@@ -49,17 +50,19 @@ model Product {
 }
 
 model Category {
-  id       String    @id @default(uuid())
-  name     String    @unique
-  products Product[]
+  id        String    @id @default(uuid())
+  name      String    @unique
+  createdAt DateTime  @default(now())
+  updatedAt DateTime
+  products  Product[]
 }
 
 model Cart {
   id        String   @id @default(uuid())
-  userId    String   @unique
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   products  Json
+  userId    String   @unique
   user      User     @relation(fields: [userId], references: [id])
 }
 
@@ -70,5 +73,15 @@ model Order {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   products  Json
+  status    String   @default("Pending")
   user      User     @relation(fields: [userId], references: [id])
+}
+
+model Logs {
+  id        String    @id
+  type      String
+  message   String
+  createdAt DateTime  @default(now())
+  userId    String
+  AdminUser AdminUser @relation(fields: [userId], references: [id])
 }

@@ -1,12 +1,6 @@
 import Image from "next/image";
-import React, { useEffect, useState } from "react";
-import { Button } from "@/components/ui/button";
+import React from "react";
 import { useRouter } from "next/navigation";
-import { useDispatch, useSelector } from "react-redux";
-import { setCartData } from "@/redux/actions";
-import { Cart, CartProduct, InitialState } from "@/redux/types";
-import axios from "axios";
-import { toast } from "react-hot-toast";
 
 interface Product {
   id: string;
@@ -22,93 +16,7 @@ interface ProductCardProps {
 }
 const ProductCard: React.FC<ProductCardProps> = ({ product, feature }) => {
   const navigate = useRouter();
-  const cartData = useSelector((state: any) => state.cart);
-  const userData = useSelector((state: any) => state.userData);
-  const dispatch = useDispatch();
-  const [existingCartItemIndex, setExistingCartItemIndex] = useState<Number>();
 
-  useEffect(() => {
-    const index = cartData?.products?.findIndex(
-      (item: CartProduct) => item.productId === product.id
-    );
-    setExistingCartItemIndex(index);
-  }, [cartData, product.id]);
-
-  const createCartInDatabase = async (sendData: any) => {
-    try {
-      const { data } = await axios.post("/api/cart/create", {
-        ...sendData,
-        userId: userData.userId,
-      });
-      dispatch(setCartData({ products: sendData.products, id: data.id }));
-    } catch (error) {
-      toast.error("Error In Saving Cart!");
-    }
-  };
-
-  const updateCartInDatabase = async (data: any) => {
-    try {
-      await axios.post(`/api/cart/update/${cartData.id}`, data);
-    } catch (error) {
-      toast.error("Error In Saving Cart!");
-    }
-  };
-
-  const addToCartHandler = () => {
-    let updatedCart;
-    if (existingCartItemIndex !== -1) {
-      updatedCart = cartData.map((item: CartProduct, index: Number) =>
-        index === existingCartItemIndex
-          ? { ...item, quantity: Number(item.quantity) + 1 }
-          : item
-      );
-      const sendData = {
-        id: cartData.id,
-        products: updatedCart,
-      };
-      updateCartInDatabase(sendData);
-      dispatch(setCartData(sendData));
-    } else {
-      updatedCart = [
-        ...cartData.products,
-        {
-          productId: product.id,
-          name: product.product_name,
-          price: product.price,
-          quantity: 1,
-          category: product.category,
-        },
-      ];
-      const sendData = {
-        products: updatedCart,
-      };
-      if (cartData.id) {
-        updateCartInDatabase({ ...sendData, id: cartData.id });
-        dispatch(setCartData({ ...sendData, id: cartData.id }));
-      } else {
-        createCartInDatabase(sendData);
-      }
-    }
-  };
-
-  const removeFromCartHandler = () => {
-    if (existingCartItemIndex !== -1) {
-      dispatch(
-        setCartData(
-          cartData.products.filter(
-            (item: CartProduct) => item.productId !== product.id
-          )
-        )
-      );
-      const sendData = {
-        id: cartData.id,
-        products: cartData.products.filter(
-          (item: CartProduct) => item.productId !== product.id
-        ),
-      };
-      updateCartInDatabase(sendData);
-    }
-  };
   return (
     <div className="bg-white shadow-md rounded-lg px-4 py-6 cursor-pointer overflow-hidden flex flex-col justify-between items-center">
       <Image
@@ -126,22 +34,6 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, feature }) => {
         >
           {product.product_name}
         </p>
-        {!feature && (
-          <div className="flex justify-between items-center">
-            <p className="my-4 font-medium text-right text-lg">
-              ₹{product.price}
-            </p>
-            {existingCartItemIndex === -1 ? (
-              <Button size={"sm"} onClick={addToCartHandler}>
-                Add To Cart
-              </Button>
-            ) : (
-              <Button size={"sm"} onClick={removeFromCartHandler}>
-                Remove From Cart
-              </Button>
-            )}
-          </div>
-        )}
       </div>
     </div>
   );
