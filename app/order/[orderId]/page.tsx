@@ -67,9 +67,6 @@ const GetOrder = () => {
             <p className="bg-[#272e3f] inline-block text-white px-2 py-1 mb-2 text-xs font-medium rounded tracking-wider">
               {orderData.status}
             </p>
-            <p className="mt-2">
-              <span className="font-semibold">Order Id:</span> {orderData.id}
-            </p>
             <p className="my-3 text-slate-700">
               Your order has been placed and will soon reach to you!
             </p>

@@ -294,7 +294,7 @@ const Navbar = () => {
             </DropdownMenuItem>
             <DropdownMenuItem
               className="cursor-pointer"
-              onClick={() => router.push("/orders")}
+              onClick={() => router.push("/order/myorders")}
             >
               My Orders
             </DropdownMenuItem>

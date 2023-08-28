@@ -177,12 +177,12 @@ const Product = () => {
     } else {
       createCartInDatabase({
         products: updatedCart,
-        userId: userData.userId,
+        userId: userData.id,
       });
     }
     dispatch(setCartData(updatedData));
     let orderData: Order = {
-      userId: userData.userId,
+      userId: userData.id,
       total: product!.price,
       products: [
         {

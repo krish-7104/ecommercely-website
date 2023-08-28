@@ -36,11 +36,11 @@ const Account = () => {
   useEffect(() => {
     const getUserProfile = async () => {
       const resp = await axios.post("/api/profile/get", {
-        id: userData.userId,
+        id: userData.id,
       });
       setData(resp.data.user);
     };
-    userData.userId && getUserProfile();
+    userData.id && getUserProfile();
   }, [userData]);
 
   const formSchema = z.object({
