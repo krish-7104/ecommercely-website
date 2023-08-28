@@ -1,5 +1,6 @@
 "use client";
 import { Button } from "@/components/ui/button";
+import { setCartData, setOrderData } from "@/redux/actions";
 import { InitialState, OrderProduct, User } from "@/redux/types";
 import axios from "axios";
 import { useRouter } from "next/navigation";
@@ -47,6 +48,8 @@ const Order = () => {
         ...orderData,
       });
       toast.success("Order Placed!");
+      dispatch(setCartData({ products: [], id: "" }));
+      dispatch(setOrderData({ total: 0, userId: "", products: [] }));
       router.push(`/order/${data.id}`);
     } catch (error) {
       toast.error("Error In Buying Product!");
@@ -71,14 +74,14 @@ const Order = () => {
                     className="w-full flex justify-evenly items-center my-2"
                   >
                     <p className="w-3/5">{item.name}</p>
-                    <p className="w-1/5">{item.price}</p>
+                    <p className="w-1/5">₹{item.price}</p>
                     <p className="w-1/5">{item.quantity}</p>
                   </div>
                 );
               })}
             <div className="w-full flex justify-evenly items-center mt-4 border-t pt-2">
               <p className="w-3/5 font-semibold">Total Price and Quantity</p>
-              <p className="w-1/5 font-semibold">{orderData.total}</p>
+              <p className="w-1/5 font-semibold">₹{orderData.total}</p>
               <p className="w-1/5 font-semibold">
                 {orderData.products.reduce(
                   (sum: number, item: OrderProduct) => sum + item.quantity,

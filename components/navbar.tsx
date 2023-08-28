@@ -275,10 +275,12 @@ const Navbar = () => {
         <DropdownMenu>
           <DropdownMenuTrigger>
             <Avatar className="cursor-pointer select-none">
-              <AvatarFallback>
-                {userData?.name?.split(" ")[0].slice(0, 1)}
-                {userData?.name?.split(" ")[1].slice(0, 1)}
-              </AvatarFallback>
+              {userData.name !== "" && (
+                <AvatarFallback>
+                  {userData?.name?.split(" ")[0].slice(0, 1)}
+                  {userData?.name?.split(" ")[1].slice(0, 1)}
+                </AvatarFallback>
+              )}
             </Avatar>
           </DropdownMenuTrigger>
           <DropdownMenuContent className="absolute -right-2">
