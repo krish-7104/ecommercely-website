@@ -1,33 +1,49 @@
 export type InitialState = {
-  userData: User | {};
+  userData: User;
   cart: Cart;
+  order: Order;
 };
 
 export type User = {
-  name: String;
-  email: String;
-  id: String;
+  name: string;
+  email: string;
+  id: string;
 };
 
 export type Product = {
-  name: String;
-  price: Number;
-  quantity: Number;
+  name: string;
+  price: number;
+  quantity: number;
 };
 
 export type Action = {
-  type: String;
+  type: string;
   payload: any;
 };
 
 export type CartProduct = {
-  productId: String;
-  quantity: Number;
-  name: String;
-  price: Number;
+  productId: string;
+  quantity: number;
+  name: string;
+  price: number;
+  category: String;
 };
 
 export type Cart = {
   products: CartProduct[];
-  id: String;
+  id: string;
+};
+
+export type Order = {
+  total: number;
+  products: OrderProduct[];
+  userId: string;
+};
+
+export type OrderProduct = {
+  name: string;
+  price: number;
+  productId: string;
+  quantity: number;
+  category: string;
 };

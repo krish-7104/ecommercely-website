@@ -1,13 +1,13 @@
 "use client";
 import axios from "axios";
 import Image from "next/image";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import { toast } from "react-hot-toast";
 import { Button } from "@/components/ui/button";
-import { setCartData } from "@/redux/actions";
+import { setCartData, setOrderData } from "@/redux/actions";
 import { useDispatch, useSelector } from "react-redux";
-import { CartProduct } from "@/redux/types";
+import { CartProduct, Order } from "@/redux/types";
 import { Minus, Plus } from "lucide-react";
 
 interface Product {
@@ -16,9 +16,11 @@ interface Product {
   price: number;
   image: string;
   id: string;
+  category: string;
 }
 
 const Product = () => {
+  const router = useRouter();
   const params = useParams();
   const [product, setProduct] = useState<Product | undefined>();
   const [loading, setLoading] = useState(true);
@@ -35,7 +37,6 @@ const Product = () => {
         );
         setProduct(resp.data);
         setLoading(false);
-        console.log(resp.data);
         toast.dismiss();
       } catch (error: any) {
         setProduct(undefined);
@@ -97,6 +98,7 @@ const Product = () => {
         quantity: 1,
         name: product!.product_name,
         price: product!.price,
+        category: product!.category,
       };
 
       updatedCart = [...cartData.products, newCartItem];
@@ -156,6 +158,46 @@ const Product = () => {
     updateCartInDatabase(updatedData);
   };
 
+  const buyProductHandler = async () => {
+    const newCartItem: CartProduct = {
+      productId: product!.id,
+      quantity: 1,
+      name: product!.product_name,
+      price: product!.price,
+      category: product!.category,
+    };
+    let updatedCart;
+    updatedCart = [newCartItem];
+    const updatedData = {
+      id: cartData.id,
+      products: updatedCart,
+    };
+    if (cartData.id) {
+      updateCartInDatabase(updatedData);
+    } else {
+      createCartInDatabase({
+        products: updatedCart,
+        userId: userData.userId,
+      });
+    }
+    dispatch(setCartData(updatedData));
+    let orderData: Order = {
+      userId: userData.userId,
+      total: product!.price,
+      products: [
+        {
+          productId: product!.id,
+          quantity: 1,
+          name: product!.product_name,
+          price: product!.price,
+          category: product!.category,
+        },
+      ],
+    };
+    dispatch(setOrderData(orderData));
+    router.push("/order");
+  };
+
   return (
     <main className="min-h-[100vh] w-full flex bg-[#f6f9fc] flex-col items-center">
       {!loading && product && (
@@ -172,7 +214,7 @@ const Product = () => {
             <p className="mb-4">{product.product_description}</p>
             <p className="font-semibold text-xl mb-4">₹{product.price}</p>
             <div className="flex">
-              <Button>Buy Now</Button>
+              <Button onClick={buyProductHandler}>Buy Now</Button>
               {cartData.products.findIndex(
                 (item: CartProduct) => item.productId === product.id
               ) === -1 ? (
