@@ -92,4 +92,5 @@ model resetToken {
   userId    String   @unique
   user      User     @relation(fields: [userId], references: [id])
   token     String
+  expiresAt DateTime
 }

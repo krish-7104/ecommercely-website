@@ -2,7 +2,7 @@ import nodemailer from "nodemailer";
 import crypto from "crypto";
 import prismadb from "@/lib/prismadb";
 import { NextResponse } from "next/server";
-
+import { templateHandler } from "@/helper/emailTemplate";
 const transporter = nodemailer.createTransport({
   service: "Gmail",
   auth: {
@@ -24,6 +24,7 @@ export async function POST(req: Request, res: Response) {
       return new NextResponse("User Not Found!", { status: 404 });
     }
     const resetToken = crypto.randomBytes(20).toString("hex");
+    const tokenExpiry = new Date(Date.now() + 2 * 60 * 60 * 1000);
 
     const findToken = await prismadb.resetToken.findUnique({
       where: {
@@ -36,6 +37,7 @@ export async function POST(req: Request, res: Response) {
         data: {
           userId: user.id,
           token: resetToken,
+          expiresAt: tokenExpiry,
         },
       });
     } else {
@@ -48,21 +50,16 @@ export async function POST(req: Request, res: Response) {
         data: {
           userId: user.id,
           token: resetToken,
+          expiresAt: tokenExpiry,
         },
       });
     }
 
     const mailOptions = {
-      from: "krishwork11@gmail.com",
+      from: "Ecommercely <krishwork11@gmail.com>",
       to: email,
       subject: "Password Reset - Ecommercely",
-      html: `<p>Hello,</p>
-      <p>You've requested a password reset for your account.</p>
-      <p>Click the following link to reset your password:</p>
-      <a href=http://localhost:3000/settings/resetPassword/${resetToken}>Reset Password</a>
-      <p>If you didn't request this, please ignore this email.</p>
-      <p>Best regards,</p>
-      <p>Team Ecommercely</p>`,
+      html: templateHandler(user.name, resetToken),
     };
 
     await transporter.sendMail(mailOptions);

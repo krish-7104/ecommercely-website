@@ -12,6 +12,9 @@ export async function POST(req: Request) {
     const resetTokenRecord = await prismadb.resetToken.findFirst({
       where: {
         token: token,
+        expiresAt: {
+          gte: new Date(),
+        },
       },
     });
     if (resetTokenRecord) {
@@ -28,7 +31,7 @@ export async function POST(req: Request) {
 
       return new NextResponse("Password Updated", { status: 200 });
     } else {
-      return new NextResponse("Token Not Found", { status: 401 });
+      return new NextResponse("Invalid or Expired Token", { status: 401 });
     }
   } catch (error) {
     console.log(error);
