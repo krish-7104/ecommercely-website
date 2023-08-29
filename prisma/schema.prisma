@@ -32,6 +32,7 @@ model User {
   updatedAt DateTime @updatedAt
   carts     Cart?
   orders    Order[]
+  resetToken resetToken?
 }
 
 model Product {
@@ -78,10 +79,17 @@ model Order {
 }
 
 model Logs {
-  id        String    @id
+  id        String   @id @default(uuid())
   type      String
   message   String
   createdAt DateTime  @default(now())
   userId    String
   AdminUser AdminUser @relation(fields: [userId], references: [id])
+}
+
+model resetToken {
+  id        String   @id @default(uuid())
+  userId    String   @unique
+  user      User     @relation(fields: [userId], references: [id])
+  token     String
 }
