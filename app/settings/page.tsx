@@ -37,7 +37,7 @@ const Settings = () => {
   }, [userData.id]);
 
   const resetPasswordHandler = async () => {
-    toast.loading("Initiated Password Reset..");
+    toast.loading("Initiating Password Reset..");
     try {
       const resp = await axios.post("/api/auth/forget", { email: user.email });
       toast.dismiss();
@@ -48,7 +48,7 @@ const Settings = () => {
     }
   };
   const logoutHandler = async () => {
-    toast.loading("Initiated Logout..");
+    toast.loading("Initiating Logout..");
     try {
       await axios.get("/api/auth/logout");
       toast.dismiss();

@@ -31,14 +31,9 @@ const ProductCategoryWise = ({
       <div className="grid grid-cols-4 gap-4">
         {products &&
           products.map((product: Product) => {
-            if (product.visible && product.featured)
-              return (
-                <ProductCard
-                  key={product.id}
-                  product={product}
-                  feature={true}
-                />
-              );
+            return (
+              <ProductCard key={product.id} product={product} feature={true} />
+            );
           })}
       </div>
     </div>

@@ -88,44 +88,51 @@ const Product = () => {
   };
 
   const incrementCartProduct = (productId: string) => {
-    const existingCartItemIndex = cartData.products.findIndex(
-      (item: CartProduct) => item.productId === productId
-    );
-    stockDecreasehandler(productId, {
-      quantity: 1,
-      type: "dec",
-    });
-    let updatedCart;
-    if (existingCartItemIndex === -1) {
-      const newCartItem: CartProduct = {
-        productId: product!.id,
-        quantity: 1,
-        name: product!.product_name,
-        price: product!.price,
-        category: product!.category,
-      };
-
-      updatedCart = [...cartData.products, newCartItem];
-    } else {
-      updatedCart = cartData.products.map((item: CartProduct, index: number) =>
-        index === existingCartItemIndex
-          ? { ...item, quantity: Number(item.quantity) + 1 }
-          : item
+    if (userData.id) {
+      const existingCartItemIndex = cartData.products.findIndex(
+        (item: CartProduct) => item.productId === productId
       );
-    }
-    const updatedData = {
-      id: cartData.id,
-      products: updatedCart,
-    };
-    if (cartData.id) {
-      updateCartInDatabase(updatedData);
-    } else {
-      createCartInDatabase({
-        products: updatedCart,
-        userId: userData.id,
+      stockDecreasehandler(productId, {
+        quantity: 1,
+        type: "dec",
       });
+      let updatedCart;
+      if (existingCartItemIndex === -1) {
+        const newCartItem: CartProduct = {
+          productId: product!.id,
+          quantity: 1,
+          name: product!.product_name,
+          price: product!.price,
+          category: product!.category,
+        };
+
+        updatedCart = [...cartData.products, newCartItem];
+      } else {
+        updatedCart = cartData.products.map(
+          (item: CartProduct, index: number) =>
+            index === existingCartItemIndex
+              ? { ...item, quantity: Number(item.quantity) + 1 }
+              : item
+        );
+      }
+      const updatedData = {
+        id: cartData.id,
+        products: updatedCart,
+      };
+      if (cartData.id) {
+        updateCartInDatabase(updatedData);
+      } else {
+        createCartInDatabase({
+          products: updatedCart,
+          userId: userData.id,
+        });
+      }
+      dispatch(setCartData(updatedData));
+    } else {
+      toast.loading("Redirecting...");
+      router.replace("/login");
+      toast.dismiss();
     }
-    dispatch(setCartData(updatedData));
   };
   const decrementCartProduct = (productId: string) => {
     const existingCartItemIndex = cartData.products.findIndex(

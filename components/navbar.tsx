@@ -1,6 +1,6 @@
 "use client";
 import { Store, ShoppingCart, Search, Minus, Plus, Trash } from "lucide-react";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import {
@@ -34,16 +34,19 @@ const Navbar = () => {
   const cartData = useSelector((state: InitialState) => state.cart);
   const userData = useSelector((state: InitialState) => state.userData);
   const router = useRouter();
+  const pathname = usePathname();
   useEffect(() => {
     const getUserTokenData = async () => {
-      const resp = await axios.get("/api/auth/user");
-      dispatch(
-        setUserData({
-          name: resp.data.user.name,
-          email: resp.data.user.email,
-          id: resp.data.user.userId,
-        })
-      );
+      try {
+        const resp = await axios.get("/api/auth/user");
+        dispatch(
+          setUserData({
+            name: resp.data.user.name,
+            email: resp.data.user.email,
+            id: resp.data.user.userId,
+          })
+        );
+      } catch (error) {}
     };
 
     getUserTokenData();
@@ -311,40 +314,56 @@ const Navbar = () => {
             </SheetHeader>
           </SheetContent>
         </Sheet>
-        <DropdownMenu>
-          <DropdownMenuTrigger>
-            <Avatar className="cursor-pointer select-none">
-              {userData.name !== "" && (
-                <AvatarFallback>
-                  {userData?.name?.split(" ")[0].slice(0, 1)}
-                  {userData?.name?.split(" ")[1].slice(0, 1)}
-                </AvatarFallback>
-              )}
-            </Avatar>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent className="absolute -right-2">
-            <DropdownMenuLabel>My Account</DropdownMenuLabel>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem
-              className="cursor-pointer"
-              onClick={() => router.push("/settings/profile")}
+        {pathname !== "/login" &&
+          pathname !== "/register" &&
+          !pathname.includes("/settings/resetPassword") &&
+          userData.id !== "" && (
+            <DropdownMenu>
+              <DropdownMenuTrigger>
+                <Avatar className="cursor-pointer select-none">
+                  {userData.name !== "" && (
+                    <AvatarFallback>
+                      {userData?.name?.split(" ")[0].slice(0, 1)}
+                      {userData?.name?.split(" ")[1].slice(0, 1)}
+                    </AvatarFallback>
+                  )}
+                </Avatar>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent className="absolute -right-2">
+                <DropdownMenuLabel>My Account</DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem
+                  className="cursor-pointer"
+                  onClick={() => router.push("/settings/profile")}
+                >
+                  Profile
+                </DropdownMenuItem>
+                <DropdownMenuItem
+                  className="cursor-pointer"
+                  onClick={() => router.push("/settings/myorders")}
+                >
+                  My Orders
+                </DropdownMenuItem>
+                <DropdownMenuItem
+                  className="cursor-pointer"
+                  onClick={() => router.push("/settings")}
+                >
+                  Settings
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          )}
+        {pathname !== "/login" &&
+          pathname !== "/register" &&
+          userData.id === "" && (
+            <Button
+              onClick={() => router.push("/register")}
+              size={"sm"}
+              variant={"secondary"}
             >
-              Profile
-            </DropdownMenuItem>
-            <DropdownMenuItem
-              className="cursor-pointer"
-              onClick={() => router.push("/settings/myorders")}
-            >
-              My Orders
-            </DropdownMenuItem>
-            <DropdownMenuItem
-              className="cursor-pointer"
-              onClick={() => router.push("/settings")}
-            >
-              Settings
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
+              Register
+            </Button>
+          )}
       </div>
     </div>
   );

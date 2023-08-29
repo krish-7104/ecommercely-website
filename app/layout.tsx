@@ -5,7 +5,6 @@ import type { Metadata } from "next";
 import { Montserrat } from "next/font/google";
 import { Toaster } from "react-hot-toast";
 import { Providers } from "@/redux/provider";
-import { usePathname } from "next/navigation";
 const montserrat = Montserrat({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
@@ -18,14 +17,11 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const pathname = usePathname();
   return (
     <html lang="en">
       <body className={montserrat.className}>
         <Providers>
-          {pathname !== "/login" &&
-            pathname !== "/register" &&
-            !pathname.includes("/settings/resetPassword") && <Navbar />}
+          <Navbar />
           {children}
           <Toaster position="bottom-right" />
         </Providers>

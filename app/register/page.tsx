@@ -16,6 +16,7 @@ import { Input } from "@/components/ui/input";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
+import Link from "next/link";
 
 const Register = () => {
   const router = useRouter();
@@ -98,6 +99,9 @@ const Register = () => {
             <Button type="submit">Create Account</Button>
           </form>
         </Form>
+        <p className="text-center text-sm font-medium mt-6">
+          <Link href={"/login"}>Already Have An Account, Login?</Link>
+        </p>
       </div>
     </section>
   );

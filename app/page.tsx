@@ -17,23 +17,13 @@ interface Product {
   category: String;
 }
 
-interface Category {
-  id: string;
-  updatedAt: string;
-  name: string;
-  createAt: number;
-  products: Product[];
-}
 const Home = () => {
   const [data, setData] = useState([]);
   useEffect(() => {
     const getCategoryData = async () => {
       try {
         const resp = await axios.post("/api/category/getcategory");
-        const updatedProduct = resp.data.filter((category: Category) =>
-          category.products.some((product: Product) => product.featured)
-        );
-        setData(updatedProduct);
+        setData(resp.data);
       } catch (error: any) {
         toast.error("Something Went Wrong!");
       }
@@ -55,13 +45,14 @@ const Home = () => {
         {data &&
           data.map(
             (category: { id: string; name: string; products: Product[] }) => {
-              return (
-                <ProductCategoryWise
-                  key={category.id}
-                  title={category.name}
-                  products={category.products}
-                />
-              );
+              if (category.products.length > 0)
+                return (
+                  <ProductCategoryWise
+                    key={category.id}
+                    title={category.name}
+                    products={category.products}
+                  />
+                );
             }
           )}
         <Faqs />

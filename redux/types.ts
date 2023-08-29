@@ -26,7 +26,7 @@ export type CartProduct = {
   quantity: number;
   name: string;
   price: number;
-  category: String;
+  category: string;
 };
 
 export type Cart = {
