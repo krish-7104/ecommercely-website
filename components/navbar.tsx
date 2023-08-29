@@ -11,7 +11,6 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
-import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -28,12 +27,12 @@ import { Cart, CartProduct, InitialState, Order } from "@/redux/types";
 import Image from "next/image";
 import { toast } from "react-hot-toast";
 import { stockDecreasehandler } from "@/helper/stockDecrease";
+import Link from "next/link";
 
 const Navbar = () => {
   const dispatch = useDispatch();
   const cartData = useSelector((state: InitialState) => state.cart);
   const userData = useSelector((state: InitialState) => state.userData);
-  const [search, setSearch] = useState("");
   const router = useRouter();
   useEffect(() => {
     const getUserTokenData = async () => {
@@ -211,18 +210,10 @@ const Navbar = () => {
       >
         <Store className="mr-2 h-6 w-6" /> Ecommercely
       </div>
-      <div className="w-[40%] mx-auto flex">
-        <Input
-          placeholder="Search Product Here..."
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-          className="border-2 mr-2 focus-visible:ring-0 ring-0"
-        />
-        <Button size={"icon"} variant={"ghost"}>
-          <Search />
-        </Button>
-      </div>
       <div className="flex justify-center items-center">
+        <Link href={"/product"}>
+          <Search className="h-6 w-6 mr-5" />
+        </Link>
         <Sheet>
           <SheetTrigger>
             <ShoppingCart className="h-6 w-6 mr-4" />

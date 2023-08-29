@@ -1,6 +1,7 @@
 import Image from "next/image";
 import React from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 interface Product {
   id: string;
@@ -22,18 +23,16 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, feature }) => {
       <Image
         src={product.image}
         width={200}
-        height={240}
+        height={200}
         alt="product"
-        className="hover:scale-105 transition-all ease-linear duration-150 hover:transition-all hover:ease-linear hover:duration-150 max-h-[240px] object-contain"
+        className="hover:scale-105 transition-all ease-linear duration-150 hover:transition-all hover:ease-linear hover:duration-150 h-[200px] object-contain"
         onClick={() => navigate.push(`/product/${product.id}`)}
       />
-      <div className="flex flex-col justify-between w-full">
-        <p
-          className={`${feature ? "mt-4" : "my-4"} font-medium text-sm`}
-          onClick={() => navigate.push(`/product/${product.id}`)}
-        >
-          {product.product_name}
+      <div className="flex flex-col justify-start w-full">
+        <p className={`mt-2 font-medium text-sm`}>
+          <Link href={`/product/${product.id}`}>{product.product_name}</Link>
         </p>
+        {!feature && <p className={`mt-2 font-medium`}>₹{product.price}</p>}
       </div>
     </div>
   );

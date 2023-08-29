@@ -41,9 +41,8 @@ export async function POST(req: Request) {
 
     response.headers.set(
       "Set-Cookie",
-      `token=${token}; HttpOnly; Path=/; Max-Age=86400`
+      `token=${token}; HttpOnly; Path=/; Max-Age=${7 * 24 * 60 * 60}`
     );
-    // cookie will set for 1 day
 
     return response;
   } catch (error) {
