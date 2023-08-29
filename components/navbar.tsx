@@ -27,6 +27,7 @@ import axios from "axios";
 import { Cart, CartProduct, InitialState, Order } from "@/redux/types";
 import Image from "next/image";
 import { toast } from "react-hot-toast";
+import { stockDecreasehandler } from "@/helper/stockDecrease";
 
 const Navbar = () => {
   const dispatch = useDispatch();
@@ -67,7 +68,11 @@ const Navbar = () => {
     }
   };
 
-  const incrementCartProduct = (id: String) => {
+  const incrementCartProduct = (id: string) => {
+    stockDecreasehandler(id, {
+      quantity: 1,
+      type: "dec",
+    });
     const existingCartItemIndex = cartData.products.findIndex(
       (item: CartProduct) => item.productId === id
     );
@@ -86,6 +91,10 @@ const Navbar = () => {
   };
 
   const decrementCartProduct = (id: string, quantity: number) => {
+    stockDecreasehandler(id, {
+      quantity: 1,
+      type: "inc",
+    });
     const existingCartItemIndex = cartData.products.findIndex(
       (item: CartProduct) => item.productId === id
     );
@@ -131,6 +140,11 @@ const Navbar = () => {
         (item: CartProduct) => item.productId !== id
       ),
     };
+    let index = cartData.products.findIndex((item) => item.productId === id);
+    stockDecreasehandler(id, {
+      quantity: cartData.products[index].quantity,
+      type: "inc",
+    });
     dispatch(setCartData(sendData));
     updateCartInDatabase(sendData);
   };
@@ -163,14 +177,32 @@ const Navbar = () => {
     router.push("/order");
   };
 
-  const clearCartHandler = () => {
+  const clearCartHandler = async () => {
+    const productsToRestore: { productId: string; quantity: number }[] = [];
     const sendData = {
       id: cartData.id,
       products: [],
     };
-    dispatch(setCartData(sendData));
-    updateCartInDatabase(sendData);
+    cartData.products.forEach((item) => {
+      productsToRestore.push({
+        productId: item.productId,
+        quantity: item.quantity,
+      });
+    });
+    try {
+      for (const product of productsToRestore) {
+        await stockDecreasehandler(product.productId, {
+          quantity: product.quantity,
+          type: "inc",
+        });
+      }
+      dispatch(setCartData(sendData));
+      await updateCartInDatabase(sendData);
+    } catch (error) {
+      console.error("Error clearing cart:", error);
+    }
   };
+
   return (
     <div className="border-b w-full bg-white relative shadow-md px-6 py-3 flex justify-between items-center">
       <div

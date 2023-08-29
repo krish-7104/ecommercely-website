@@ -9,6 +9,9 @@ import { setCartData, setOrderData } from "@/redux/actions";
 import { useDispatch, useSelector } from "react-redux";
 import { CartProduct, Order } from "@/redux/types";
 import { Minus, Plus } from "lucide-react";
+import { Oval } from "react-loader-spinner";
+import Featured from "../(components)/Featured";
+import { stockDecreasehandler } from "@/helper/stockDecrease";
 
 interface Product {
   product_name: string;
@@ -30,7 +33,6 @@ const Product = () => {
 
   useEffect(() => {
     const getData = async (): Promise<void> => {
-      toast.loading("Loading Data");
       try {
         const resp = await axios.post(
           `/api/product/getproducts/${params.productId}`
@@ -52,13 +54,13 @@ const Product = () => {
 
   useEffect(() => {
     const getCartDataFromDB = async () => {
-      const resp = await axios.post(`/api/cart/get/${userData.userId}`);
+      const resp = await axios.post(`/api/cart/get/${userData.id}`);
       if (resp.data !== "Cart not found") {
         dispatch(setCartData(resp.data));
       }
     };
-    userData.userId && getCartDataFromDB();
-  }, [userData.userId, dispatch]);
+    userData.id && getCartDataFromDB();
+  }, [userData.id, dispatch]);
 
   const updateCartInDatabase = async (data: any) => {
     try {
@@ -72,7 +74,7 @@ const Product = () => {
     try {
       const { data } = await axios.post("/api/cart/create", {
         ...sendData,
-        userId: userData.userId,
+        userId: userData.id,
       });
       dispatch(
         setCartData({
@@ -89,9 +91,11 @@ const Product = () => {
     const existingCartItemIndex = cartData.products.findIndex(
       (item: CartProduct) => item.productId === productId
     );
-
+    stockDecreasehandler(productId, {
+      quantity: 1,
+      type: "dec",
+    });
     let updatedCart;
-
     if (existingCartItemIndex === -1) {
       const newCartItem: CartProduct = {
         productId: product!.id,
@@ -109,34 +113,32 @@ const Product = () => {
           : item
       );
     }
-
     const updatedData = {
       id: cartData.id,
       products: updatedCart,
     };
-
     if (cartData.id) {
       updateCartInDatabase(updatedData);
     } else {
       createCartInDatabase({
         products: updatedCart,
-        userId: userData.userId,
+        userId: userData.id,
       });
     }
-
     dispatch(setCartData(updatedData));
   };
   const decrementCartProduct = (productId: string) => {
     const existingCartItemIndex = cartData.products.findIndex(
       (item: CartProduct) => item.productId === productId
     );
-
+    stockDecreasehandler(productId, {
+      quantity: 1,
+      type: "inc",
+    });
     if (existingCartItemIndex === -1) {
       return;
     }
-
     let updatedCart;
-
     if (cartData.products[existingCartItemIndex].quantity === 1) {
       updatedCart = cartData.products.filter(
         (item: CartProduct) => item.productId !== productId
@@ -201,16 +203,18 @@ const Product = () => {
   return (
     <main className="min-h-[100vh] w-full flex bg-[#f6f9fc] flex-col items-center">
       {!loading && product && (
-        <section className="w-[90%] my-6 flex justify-between items-start">
+        <section className="w-[90%] my-6 flex justify-between items-start container">
           <Image
             src={product.image}
             alt="product"
             width={450}
-            height={450}
-            className="mr-10 w-[30%]"
+            height={300}
+            className="mr-10 w-[30%] max-h-[60vh] object-contain"
           />
           <div className="w-[70%]">
-            <p className="font-semibold text-xl mb-2">{product.product_name}</p>
+            <p className="font-semibold text-2xl mb-2">
+              {product.product_name}
+            </p>
             <p className="mb-4">{product.product_description}</p>
             <p className="font-semibold text-xl mb-4">₹{product.price}</p>
             <div className="flex">
@@ -256,6 +260,25 @@ const Product = () => {
           </div>
         </section>
       )}
+      {loading && (
+        <div className="min-h-[85vh] w-full flex justify-center items-center">
+          <Oval
+            height={30}
+            width={30}
+            color="#272d40"
+            wrapperStyle={{}}
+            wrapperClass=""
+            visible={true}
+            ariaLabel="oval-loading"
+            secondaryColor="#272d40"
+            strokeWidth={2}
+            strokeWidthSecondary={2}
+          />
+        </div>
+      )}
+      <div className="w-[90%] mx-auto my-6">
+        <Featured />
+      </div>
     </main>
   );
 };
