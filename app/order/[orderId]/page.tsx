@@ -6,6 +6,7 @@ import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import toast from "react-hot-toast";
+import { Oval } from "react-loader-spinner";
 import { useSelector } from "react-redux";
 
 type OrderData = {
@@ -19,6 +20,7 @@ type OrderData = {
 };
 
 const GetOrder = () => {
+  const [loading, setLoading] = useState(true);
   const [orderData, setOrderData] = useState<OrderData>({
     id: "",
     status: "",
@@ -51,7 +53,7 @@ const GetOrder = () => {
           toast.error("Unauthorized User");
           router.replace("/");
         }
-        console.log(data);
+        setLoading(false);
       } catch (error: any) {
         toast.error(error.message);
       }
@@ -61,7 +63,7 @@ const GetOrder = () => {
 
   return (
     <section className="w-full h-[90vh] flex justify-center items-center">
-      {orderData.id !== "" && (
+      {!loading && orderData.id !== "" && (
         <section className="mx-auto py-8 w-[75%] min-h-[50vh] rounded-md border px-4 flex justify-evenly items-center">
           <div>
             <p className="bg-[#272e3f] inline-block text-white px-2 py-1 mb-2 text-xs font-medium rounded tracking-wider">
@@ -110,6 +112,22 @@ const GetOrder = () => {
             />
           </div>
         </section>
+      )}
+      {loading && (
+        <div className="min-h-[90vh] w-full flex justify-center items-center">
+          <Oval
+            height={30}
+            width={30}
+            color="#272d40"
+            wrapperStyle={{}}
+            wrapperClass=""
+            visible={true}
+            ariaLabel="oval-loading"
+            secondaryColor="#272d40"
+            strokeWidth={2}
+            strokeWidthSecondary={2}
+          />
+        </div>
       )}
     </section>
   );

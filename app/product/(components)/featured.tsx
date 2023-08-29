@@ -28,7 +28,6 @@ const Featured = () => {
     }
   }, [loading]);
   const getData = async (): Promise<void> => {
-    toast.loading("Loading Data");
     try {
       const resp = await axios.post("/api/product/getproducts");
       setProducts(resp.data);

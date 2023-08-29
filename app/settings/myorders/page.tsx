@@ -6,6 +6,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import { toast } from "react-hot-toast";
+import { Oval } from "react-loader-spinner";
 import { useDispatch, useSelector } from "react-redux";
 type OrderData = {
   id: string;
@@ -109,7 +110,22 @@ const MyOrders = () => {
                 </div>
               );
             })}
-          {loading && <p>Loading Your Orders...</p>}
+          {loading && (
+            <div className="min-h-[55vh] w-full flex justify-center items-center">
+              <Oval
+                height={30}
+                width={30}
+                color="#272d40"
+                wrapperStyle={{}}
+                wrapperClass=""
+                visible={true}
+                ariaLabel="oval-loading"
+                secondaryColor="#272d40"
+                strokeWidth={2}
+                strokeWidthSecondary={2}
+              />
+            </div>
+          )}
         </section>
       </section>
     </main>
