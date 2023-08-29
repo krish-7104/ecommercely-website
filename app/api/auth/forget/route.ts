@@ -4,15 +4,12 @@ import prismadb from "@/lib/prismadb";
 import { NextResponse } from "next/server";
 
 const transporter = nodemailer.createTransport({
-  host: "sandbox.smtp.mailtrap.io",
-  port: 2525,
+  service: "Gmail",
   auth: {
     user: process.env.NODEMAILER_USER,
     pass: process.env.NODEMAILER_PASS,
   },
 });
-
-const resetTokens = new Map();
 
 export async function POST(req: Request, res: Response) {
   try {
@@ -28,19 +25,44 @@ export async function POST(req: Request, res: Response) {
     }
     const resetToken = crypto.randomBytes(20).toString("hex");
 
-    await prismadb.resetToken.create({
-      data: {
+    const findToken = await prismadb.resetToken.findUnique({
+      where: {
         userId: user.id,
-        token: resetToken,
       },
     });
+
+    if (!findToken) {
+      await prismadb.resetToken.create({
+        data: {
+          userId: user.id,
+          token: resetToken,
+        },
+      });
+    } else {
+      await prismadb.resetToken.delete({
+        where: {
+          id: findToken.id,
+        },
+      });
+      await prismadb.resetToken.create({
+        data: {
+          userId: user.id,
+          token: resetToken,
+        },
+      });
+    }
 
     const mailOptions = {
       from: "krishwork11@gmail.com",
       to: email,
       subject: "Password Reset - Ecommercely",
-      text: `Click the following link to reset your password: 
-      http://localhost:3000/settings/reset-password/${resetToken}`,
+      html: `<p>Hello,</p>
+      <p>You've requested a password reset for your account.</p>
+      <p>Click the following link to reset your password:</p>
+      <a href=http://localhost:3000/settings/resetPassword/${resetToken}>Reset Password</a>
+      <p>If you didn't request this, please ignore this email.</p>
+      <p>Best regards,</p>
+      <p>Team Ecommercely</p>`,
     };
 
     await transporter.sendMail(mailOptions);

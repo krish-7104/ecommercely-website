@@ -162,6 +162,15 @@ const Navbar = () => {
     dispatch(setOrderData(orderData));
     router.push("/order");
   };
+
+  const clearCartHandler = () => {
+    const sendData = {
+      id: cartData.id,
+      products: [],
+    };
+    dispatch(setCartData(sendData));
+    updateCartInDatabase(sendData);
+  };
   return (
     <div className="border-b w-full bg-white relative shadow-md px-6 py-3 flex justify-between items-center">
       <div
@@ -257,6 +266,13 @@ const Navbar = () => {
                       )
                     )}
                     <Button onClick={buyProductHandler}>Buy Now</Button>
+                    <Button
+                      onClick={clearCartHandler}
+                      variant={"secondary"}
+                      className="ml-3"
+                    >
+                      Clear Cart
+                    </Button>
                   </div>
                 ) : (
                   <div className="flex justify-center items-center w-full h-[70vh] flex-col">
@@ -288,13 +304,13 @@ const Navbar = () => {
             <DropdownMenuSeparator />
             <DropdownMenuItem
               className="cursor-pointer"
-              onClick={() => router.push("/profile")}
+              onClick={() => router.push("/settings/profile")}
             >
               Profile
             </DropdownMenuItem>
             <DropdownMenuItem
               className="cursor-pointer"
-              onClick={() => router.push("/order/myorders")}
+              onClick={() => router.push("/settings/myorders")}
             >
               My Orders
             </DropdownMenuItem>

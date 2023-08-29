@@ -23,7 +23,9 @@ export default function RootLayout({
     <html lang="en">
       <body className={montserrat.className}>
         <Providers>
-          {pathname !== "/login" && pathname !== "/register" && <Navbar />}
+          {pathname !== "/login" &&
+            pathname !== "/register" &&
+            !pathname.includes("/settings/resetPassword") && <Navbar />}
           {children}
           <Toaster position="bottom-right" />
         </Providers>

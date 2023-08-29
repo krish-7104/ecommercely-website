@@ -7,14 +7,26 @@ export async function POST(req: Request) {
       where: {
         id,
       },
+      select: {
+        name: true,
+        email: true,
+        phoneno: true,
+        address: true,
+        country: true,
+        city: true,
+        pincode: true,
+        state: true,
+        orders: true,
+        carts: true,
+        updatedAt: true,
+        createdAt: true,
+      },
     });
     if (user) {
-      const modifiedUser = { ...user };
-      modifiedUser.password = "";
       const response = new NextResponse(
         JSON.stringify({
           status: 200,
-          user: { ...modifiedUser },
+          user,
         })
       );
       return response;
