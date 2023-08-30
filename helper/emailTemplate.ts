@@ -444,7 +444,7 @@ export const templateHandler = (name: string, token: string) => {
               <table class="email-content" width="100%" cellpadding="0" cellspacing="0" role="presentation">
                 <tr>
                   <td class="email-masthead">
-                    <a href="https://example.com" class="f-fallback email-masthead_name">
+                    <a href="https://ecommercely.vercel.app" class="f-fallback email-masthead_name">
                     Ecommercely - Ecommerce Website
                   </a>
                   </td>
@@ -468,7 +468,7 @@ export const templateHandler = (name: string, token: string) => {
                                   <table width="100%" border="0" cellspacing="0" cellpadding="0" role="presentation">
                                     <tr>
                                       <td align="center">
-                                        <a href=http://localhost:3000/verify-token/${token} class="f-fallback button button--green" target="_blank">Reset your password</a>
+                                        <a href=https://ecommercely.vercel.app/verify-token/${token} class="f-fallback button button--green" target="_blank">Reset your password</a>
                                       </td>
                                     </tr>
                                   </table>
