@@ -1,11 +1,11 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
-import Featured from "@/app/product/(components)/Featured";
-import ProductCategoryWise from "@/app/product/(components)/ProductCategoryWise";
-import Faqs from "@/app/product/(components)/faqs";
+import Faqs from "@/components/faqs";
 import axios from "axios";
 import toast from "react-hot-toast";
+import ProductCategoryWise from "@/components/ProductCategoryWise";
+import Featured from "@/components/Featured";
 
 interface Product {
   id: string;
