@@ -252,7 +252,7 @@ const Product = () => {
             alt="product"
             width={450}
             height={300}
-            className="md:mr-10 w-[90%] md:w-[30%] max-h-[40vh] md:max-h-[60vh] object-contain"
+            className="md:mr-10 w-[90%] md:w-[30%] max-h-[40vh] md:max-h-[60vh] object-contain mx-auto"
           />
           <div className="w-full md:w-[70%]">
             <p className="font-semibold text-lg md:text-2xl mb-2 mt-4 md:mt-0">

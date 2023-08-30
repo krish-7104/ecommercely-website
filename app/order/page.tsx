@@ -50,7 +50,6 @@ const Order = () => {
       });
       toast.success("Order Placed!");
       dispatch(setCartData({ products: [], id: "" }));
-      dispatch(setOrderData({ total: 0, userId: "", products: [] }));
       router.push(`/order/${data.id}`);
     } catch (error) {
       toast.error("Error In Buying Product!");
@@ -181,7 +180,7 @@ const Order = () => {
             className="md:text-lg px-10 py-4"
             onClick={placeOrderHandler}
           >
-            Make Payment
+            Place Order
           </Button>
         </div>
       </section>
