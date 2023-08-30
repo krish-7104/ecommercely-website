@@ -7,11 +7,6 @@ import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import { toast } from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
-import { loadStripe } from "@stripe/stripe-js";
-
-const stripePromise = loadStripe(
-  process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY || ""
-);
 
 const Order = () => {
   const router = useRouter();
@@ -49,33 +44,16 @@ const Order = () => {
   }, [router, userData]);
 
   const placeOrderHandler = async () => {
-    toast.loading("Placing Order...");
     try {
       const { data } = await axios.post("/api/order/addorder", {
         ...orderData,
       });
-      const stripe = await stripePromise;
-      if (!stripe) {
-        toast.dismiss();
-        toast.error("Stripe initialization failed.");
-        return;
-      }
-      const session = await axios.post("/api/payment/create-session", {
-        orderId: data.id,
-      });
-      const result = await stripe.redirectToCheckout({
-        sessionId: session.data.id,
-      });
-      if (result.error) {
-        toast.dismiss();
-        toast.error("Error in starting payment session.");
-      } else {
-        toast.dismiss();
-        toast.success("Payment successful! Order placed.");
-      }
+      toast.success("Order Placed!");
+      dispatch(setCartData({ products: [], id: "" }));
+      dispatch(setOrderData({ total: 0, userId: "", products: [] }));
+      router.push(`/order/${data.id}`);
     } catch (error) {
-      toast.dismiss();
-      toast.error("Error in buying product.");
+      toast.error("Error In Buying Product!");
     }
   };
 
