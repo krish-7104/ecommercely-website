@@ -17,8 +17,8 @@ export async function POST(req: Request) {
       },
     });
 
-    if (order?.products) {
-      const lineItems = order.products.map((product: Product) => {
+    if (Array.isArray(order?.products)) {
+      const lineItems = order?.products.map((product: any) => {
         return {
           price_data: {
             currency: "inr",

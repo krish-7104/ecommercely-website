@@ -70,7 +70,6 @@ const Order = () => {
         toast.dismiss();
         toast.error("Error in starting payment session.");
       } else {
-        // await updatePaymentStatusToPaid(data.id);
         toast.dismiss();
         toast.success("Payment successful! Order placed.");
       }
