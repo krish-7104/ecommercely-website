@@ -54,7 +54,7 @@ const MyOrders = () => {
 
   return (
     <main className="flex w-full justify-center items-center">
-      <section className="md:container w-[90%] md:w-[80%] my-10">
+      <section className="md:container md:w-[80%] my-10">
         <h2 className="font-bold text-xl md:text-2xl flex items-center">
           <Activity className="mr-2" />
           My Orders
@@ -79,9 +79,9 @@ const MyOrders = () => {
                       return (
                         <div
                           key={item.productId}
-                          className="w-full flex justify-evenly items-center my-2"
+                          className="w-full flex justify-evenly items-start my-2"
                         >
-                          <p className="w-3/5 text-xs md:text-base cursor-pointer line-clamp-2">
+                          <p className="w-3/5 text-xs md:text-sm cursor-pointer line-clamp-2 pr-4 md:pr-0">
                             {item.name}
                           </p>
                           <p className="w-1/5 text-sm md:text-base md:text-left text-ce">

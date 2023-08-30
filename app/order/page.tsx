@@ -59,7 +59,7 @@ const Order = () => {
 
   return (
     <section className="w-full">
-      <section className="md:container w-[85%] mx-auto my-6">
+      <section className="md:container md:w-[90%] w-[85%] mx-auto my-6">
         <div className="my-6">
           <p className="font-bold text-lg md:text-2xl text-center">
             Order Details
