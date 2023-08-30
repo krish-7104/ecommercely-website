@@ -20,6 +20,7 @@ interface Product {
   image: string;
   id: string;
   category: string;
+  quantity: number;
 }
 
 const Product = () => {
@@ -96,6 +97,12 @@ const Product = () => {
         quantity: 1,
         type: "dec",
       });
+      const updatedProduct: Product = {
+        ...product!,
+        quantity: product!.quantity - 1,
+      };
+
+      setProduct(updatedProduct);
       let updatedCart;
       if (existingCartItemIndex === -1) {
         const newCartItem: CartProduct = {
@@ -129,8 +136,9 @@ const Product = () => {
       }
       dispatch(setCartData(updatedData));
     } else {
+      logoutHandler();
       toast.loading("Redirecting...");
-      router.replace("/login");
+      router.push("/login");
       toast.dismiss();
     }
   };
@@ -142,6 +150,12 @@ const Product = () => {
       quantity: 1,
       type: "inc",
     });
+    const updatedProduct: Product = {
+      ...product!,
+      quantity: product!.quantity + 1,
+    };
+
+    setProduct(updatedProduct);
     if (existingCartItemIndex === -1) {
       return;
     }
@@ -168,43 +182,65 @@ const Product = () => {
   };
 
   const buyProductHandler = async () => {
-    const newCartItem: CartProduct = {
-      productId: product!.id,
-      quantity: 1,
-      name: product!.product_name,
-      price: product!.price,
-      category: product!.category,
-    };
-    let updatedCart;
-    updatedCart = [newCartItem];
-    const updatedData = {
-      id: cartData.id,
-      products: updatedCart,
-    };
-    if (cartData.id) {
-      updateCartInDatabase(updatedData);
-    } else {
-      createCartInDatabase({
+    if (userData.id !== "") {
+      const newCartItem: CartProduct = {
+        productId: product!.id,
+        quantity: 1,
+        name: product!.product_name,
+        price: product!.price,
+        category: product!.category,
+      };
+      const updatedProduct: Product = {
+        ...product!,
+        quantity: product!.quantity - 1,
+      };
+
+      setProduct(updatedProduct);
+      let updatedCart;
+      updatedCart = [newCartItem];
+      const updatedData = {
+        id: cartData.id,
         products: updatedCart,
+      };
+      if (cartData.id) {
+        updateCartInDatabase(updatedData);
+      } else {
+        createCartInDatabase({
+          products: updatedCart,
+          userId: userData.id,
+        });
+      }
+      dispatch(setCartData(updatedData));
+      let orderData: Order = {
         userId: userData.id,
-      });
+        total: product!.price,
+        products: [
+          {
+            productId: product!.id,
+            quantity: 1,
+            name: product!.product_name,
+            price: product!.price,
+            category: product!.category,
+          },
+        ],
+      };
+      dispatch(setOrderData(orderData));
+      router.push("/order");
+    } else {
+      logoutHandler();
+      toast.loading("Redirecting...");
+      router.push("/login");
+      toast.dismiss();
     }
-    dispatch(setCartData(updatedData));
-    let orderData: Order = {
-      userId: userData.id,
-      total: product!.price,
-      products: [
-        {
-          productId: product!.id,
-          quantity: 1,
-          name: product!.product_name,
-          price: product!.price,
-          category: product!.category,
-        },
-      ],
-    };
-    dispatch(setOrderData(orderData));
-    router.push("/order");
+  };
+
+  const logoutHandler = async () => {
+    try {
+      await axios.get("/api/auth/logout");
+      toast.dismiss();
+    } catch (error: any) {
+      toast.dismiss();
+    }
   };
 
   return (
@@ -224,46 +260,54 @@ const Product = () => {
             </p>
             <p className="mb-4">{product.product_description}</p>
             <p className="font-semibold text-xl mb-4">₹{product.price}</p>
-            <div className="flex">
-              <Button onClick={buyProductHandler}>Buy Now</Button>
-              {cartData.products.findIndex(
-                (item: CartProduct) => item.productId === product.id
-              ) === -1 ? (
-                <Button
-                  variant={"secondary"}
-                  className="ml-4"
-                  onClick={() => incrementCartProduct(product.id)}
-                >
-                  Add To Cart
-                </Button>
-              ) : (
-                <div className="flex justify-center items-center bg-slate-100 border rounded-md ml-4">
-                  <span
-                    className="flex justify-center items-center px-2 py-1 cursor-pointer"
-                    onClick={() => decrementCartProduct(product.id)}
-                  >
-                    <Minus size={16} className="mx-2" />
-                  </span>
-                  <p className="text-sm min-w-[20px] max-w-[20px] text-center">
-                    {cartData.products.findIndex(
-                      (item: CartProduct) => item.productId === product.id
-                    ) === -1
-                      ? 0
-                      : cartData.products[
-                          cartData.products.findIndex(
-                            (item: CartProduct) => item.productId === product.id
-                          )
-                        ].quantity}
-                  </p>
-                  <span
-                    className="flex justify-center items-center px-2 py-1 cursor-pointer"
+            {product.quantity <= 0 && (
+              <p className="font-semibold text-red-500 text-lg mb-4">
+                Product Out Of Stock
+              </p>
+            )}
+            {product.quantity > 0 && (
+              <div className="flex">
+                <Button onClick={buyProductHandler}>Buy Now</Button>
+                {cartData.products.findIndex(
+                  (item: CartProduct) => item.productId === product.id
+                ) === -1 ? (
+                  <Button
+                    variant={"secondary"}
+                    className="ml-4"
                     onClick={() => incrementCartProduct(product.id)}
                   >
-                    <Plus size={16} className="mx-2" />
-                  </span>
-                </div>
-              )}
-            </div>
+                    Add To Cart
+                  </Button>
+                ) : (
+                  <div className="flex justify-center items-center bg-slate-100 border rounded-md ml-4">
+                    <span
+                      className="flex justify-center items-center px-2 py-1 cursor-pointer"
+                      onClick={() => decrementCartProduct(product.id)}
+                    >
+                      <Minus size={16} className="mx-2" />
+                    </span>
+                    <p className="text-sm min-w-[20px] max-w-[20px] text-center">
+                      {cartData.products.findIndex(
+                        (item: CartProduct) => item.productId === product.id
+                      ) === -1
+                        ? 0
+                        : cartData.products[
+                            cartData.products.findIndex(
+                              (item: CartProduct) =>
+                                item.productId === product.id
+                            )
+                          ].quantity}
+                    </p>
+                    <span
+                      className="flex justify-center items-center px-2 py-1 cursor-pointer"
+                      onClick={() => incrementCartProduct(product.id)}
+                    >
+                      <Plus size={16} className="mx-2" />
+                    </span>
+                  </div>
+                )}
+              </div>
+            )}
           </div>
         </section>
       )}

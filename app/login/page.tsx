@@ -43,8 +43,9 @@ const Login = () => {
       toast.dismiss();
       router.replace("/");
     } catch (error: any) {
+      console.log(error);
       toast.dismiss();
-      toast.error("Uh oh! Something went wrong.");
+      toast.error(error.response.data);
     }
   };
   return (

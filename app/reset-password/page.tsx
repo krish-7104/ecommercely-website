@@ -39,7 +39,7 @@ const ResetPassword = () => {
       toast.success("Password Reset Link Send On Your Email");
     } catch (error: any) {
       toast.dismiss();
-      toast.error(error.message);
+      toast.error(error.response.data);
     }
   };
   return (

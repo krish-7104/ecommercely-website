@@ -29,7 +29,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, feature }) => {
         onClick={() => navigate.push(`/product/${product.id}`)}
       />
       <div className="flex flex-col justify-start w-full">
-        <p className={`mt-2 font-medium text-sm`}>
+        <p className={`mt-2 font-medium text-sm line-clamp-2`}>
           <Link href={`/product/${product.id}`}>{product.product_name}</Link>
         </p>
         {!feature && <p className={`mt-2 font-medium`}>₹{product.price}</p>}

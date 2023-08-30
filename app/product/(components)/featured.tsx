@@ -7,6 +7,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import { toast } from "react-hot-toast";
+import ProductLoadingSkeleton from "@/components/ProductLoadingSkeleton";
 
 interface Product {
   id: string;
@@ -42,12 +43,12 @@ const Featured = () => {
   };
   return (
     <div className="mb-10">
-      <p className="text-xl font-semibold flex items-center">
+      <p className="text-xl font-semibold flex items-center flex-wrap">
         <Star className="mr-2" />
         Featured Products
       </p>
       <Separator className="my-4" />
-      <div className="grid grid-cols-4 gap-4">
+      <div className="grid grid-cols-5 gap-4">
         {!loading &&
           products &&
           products.map((product: Product) => {
@@ -62,26 +63,16 @@ const Featured = () => {
           })}
         {loading && (
           <>
-            <div className="bg-white shadow-md rounded-lg px-4 py-6 cursor-pointer overflow-hidden flex flex-col justify-between items-center">
-              <Skeleton className="h-[220px] w-[200px] mb-4" />
-              <Skeleton className="h-4 w-[250px] mb-4" />
-              <Skeleton className="h-4 w-[250px] mb-4" />
-            </div>
-            <div className="bg-white shadow-md rounded-lg px-4 py-6 cursor-pointer overflow-hidden flex flex-col justify-between items-center">
-              <Skeleton className="h-[220px] w-[200px] mb-4" />
-              <Skeleton className="h-4 w-[250px] mb-4" />
-              <Skeleton className="h-4 w-[250px] mb-4" />
-            </div>
-            <div className="bg-white shadow-md rounded-lg px-4 py-6 cursor-pointer overflow-hidden flex flex-col justify-between items-center">
-              <Skeleton className="h-[220px] w-[200px] mb-4" />
-              <Skeleton className="h-4 w-[250px] mb-4" />
-              <Skeleton className="h-4 w-[250px] mb-4" />
-            </div>
-            <div className="bg-white shadow-md rounded-lg px-4 py-6 cursor-pointer overflow-hidden flex flex-col justify-between items-center">
-              <Skeleton className="h-[220px] w-[200px] mb-4" />
-              <Skeleton className="h-4 w-[250px] mb-4" />
-              <Skeleton className="h-4 w-[250px] mb-4" />
-            </div>
+            <ProductLoadingSkeleton />
+            <ProductLoadingSkeleton />
+            <ProductLoadingSkeleton />
+            <ProductLoadingSkeleton />
+            <ProductLoadingSkeleton />
+            <ProductLoadingSkeleton />
+            <ProductLoadingSkeleton />
+            <ProductLoadingSkeleton />
+            <ProductLoadingSkeleton />
+            <ProductLoadingSkeleton />
           </>
         )}
       </div>

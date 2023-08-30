@@ -61,21 +61,18 @@ const Products = () => {
 
   useEffect(() => {
     if (search !== "") {
-      let updatedData: Product[] = [];
-      data.forEach((item: Product) => {
-        if (item.product_name.toLowerCase().includes(search.toLowerCase())) {
-          updatedData.push(item);
-        }
-      });
+      const updatedData = backupData.filter((item) =>
+        item.product_name.toLowerCase().includes(search.toLowerCase())
+      );
       setData(updatedData);
     } else {
       setData(backupData);
     }
-  }, [data, search, backupData]);
+  }, [search, backupData]);
 
   useEffect(() => {
     if (filter.name === "price") {
-      let updatedData: Product[] = [...data];
+      let updatedData = [...backupData];
       if (filter.type === "low") {
         updatedData.sort((a, b) => a.price - b.price);
       } else if (filter.type === "high") {
@@ -85,7 +82,7 @@ const Products = () => {
     } else {
       setData(backupData);
     }
-  }, [data, filter, backupData]);
+  }, [filter, backupData]);
 
   return (
     <main className="w-full mx-auto flex justify-center items-center flex-col">
@@ -117,6 +114,9 @@ const Products = () => {
           </DropdownMenuContent>
         </DropdownMenu>
       </section>
+      {!loading && data.length === 0 && (
+        <p className="my-6">No Products At This Moment</p>
+      )}
       <section className="grid grid-cols-5 gap-4 w-[90%] my-6">
         {!loading &&
           data &&
