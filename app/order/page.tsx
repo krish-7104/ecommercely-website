@@ -36,7 +36,7 @@ const Order = () => {
       setUserProfile(resp.data.user);
       if (!resp.data.user.address) {
         toast("Complete Profile Details");
-        router.push("/profile");
+        router.push("/settings/profile");
       }
     };
 
