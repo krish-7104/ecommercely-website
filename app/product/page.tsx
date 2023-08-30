@@ -90,7 +90,7 @@ const Products = () => {
           placeholder="Search Product Here..."
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          className="border-2 mr-2 focus-visible:ring-0 ring-0 relative w-[40%]"
+          className="border-2 mr-2 focus-visible:ring-0 ring-0 text-xs md:text-base relative w-[85%] md:w-[40%]"
         />
 
         <DropdownMenu>
@@ -116,7 +116,7 @@ const Products = () => {
       {!loading && data.length === 0 && (
         <p className="my-6">No Products At This Moment</p>
       )}
-      <section className="grid grid-cols-5 gap-4 w-[90%] my-6">
+      <section className="grid md:grid-cols-5 grid-cols-2 gap-4 w-[90%] my-6">
         {!loading &&
           data &&
           data.map((item: Product) => {

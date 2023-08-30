@@ -76,6 +76,7 @@ model Order {
   products  Json
   status    String   @default("Pending")
   user      User     @relation(fields: [userId], references: [id])
+  paymentStatus String?
 }
 
 model Logs {

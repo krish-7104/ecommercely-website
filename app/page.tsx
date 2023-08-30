@@ -37,7 +37,7 @@ const Home = () => {
           <Image
             src={require("../public/homeImage.png")}
             alt="main image"
-            className="h-[300px] object-cover shadow-md rounded-xl"
+            className="md:h-[300px] object-cover shadow-md rounded-xl"
             priority
           />
         </div>

@@ -50,8 +50,8 @@ const Login = () => {
   };
   return (
     <section className="relative bg-[#f6f9fc] flex justify-center items-center h-[88vh] w-full">
-      <div className="w-[35%] bg-white shadow-lg border rounded-md px-7 py-5">
-        <p className="text-xl font-semibold text-center mb-6">
+      <div className="md:container w-[90%] md:w-[35%] bg-white shadow-lg border rounded-md px-7 py-5">
+        <p className="md:text-xl font-semibold text-center mb-6">
           Login - Ecommercely
         </p>
         <Form {...form}>

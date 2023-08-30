@@ -1,4 +1,5 @@
 "use client";
+import dateFormaterHandler from "@/helper/DateFormatter";
 import { InitialState } from "@/redux/types";
 import axios from "axios";
 import Image from "next/image";
@@ -40,15 +41,10 @@ const GetOrder = () => {
           `/api/order/getorder/${param.orderId}`
         );
         if (userData.id === data.userId) {
-          let date = new Date(data.createdAt);
-          const istOffsetMilliseconds = 5.5 * 60 * 60 * 1000;
-          const istTimeMilliseconds =
-            new Date(date).getTime() + istOffsetMilliseconds;
-          const updatedDate = new Date(istTimeMilliseconds).toLocaleString(
-            "en-IN",
-            { timeZone: "Asia/Kolkata" }
-          );
-          setOrderData({ ...data, createdAt: updatedDate });
+          setOrderData({
+            ...data,
+            createdAt: dateFormaterHandler(data.createdAt),
+          });
         } else {
           toast.error("Unauthorized User");
           router.replace("/");
@@ -64,7 +60,7 @@ const GetOrder = () => {
   return (
     <section className="w-full h-[90vh] flex justify-center items-center">
       {!loading && orderData.id !== "" && (
-        <section className="mx-auto py-8 w-[75%] min-h-[50vh] rounded-md border px-4 flex justify-evenly items-center">
+        <section className="mx-auto py-8 md:container w-[90%] md:w-[75%] md:min-h-[50vh] rounded-md border px-4 flex justify-evenly items-center flex-col-reverse md:flex-row">
           <div>
             <p className="bg-[#272e3f] inline-block text-white px-2 py-1 mb-2 text-xs font-medium rounded tracking-wider">
               {orderData.status}
@@ -73,8 +69,10 @@ const GetOrder = () => {
               Your order has been placed and will soon reach to you!
             </p>
             <div className="w-full flex justify-start items-start mt-6 mb-4 border-b pb-2">
-              <p className="w-3/4 font-semibold">Product</p>
-              <p className="w-1/4 font-semibold">Total</p>
+              <p className="w-3/4 font-semibold text-sm md:text-base">
+                Product
+              </p>
+              <p className="w-1/4 font-semibold text-sm md:text-base">Total</p>
             </div>
             {orderData &&
               orderData.products.map((item: any) => {
@@ -83,27 +81,31 @@ const GetOrder = () => {
                     key={item.productId}
                     className="w-full flex justify-start items-start my-2"
                   >
-                    <p className="w-3/4 cursor-pointer text-sm">
+                    <p className="w-3/4 cursor-pointer text-xs md:text-sm">
                       <Link href={`/product/${item.productId}`} target="_blank">
                         {item.name}
                       </Link>
                     </p>
-                    <p className="w-1/4 text-sm">
+                    <p className="w-1/4 text-xs md:text-sm">
                       {item.quantity} x ₹{item.price}
                     </p>
                   </div>
                 );
               })}
             <div className="w-full flex justify-start items-start mt-4 mb-4">
-              <p className="w-3/4 font-semibold">Subtotal</p>
-              <p className="w-1/4 font-semibold">{orderData.total}</p>
+              <p className="w-3/4 font-semibold text-sm md:text-base">
+                Subtotal
+              </p>
+              <p className="w-1/4 font-semibold text-sm md:text-base">
+                {orderData.total}
+              </p>
             </div>
-            <p className="mt-6 mb-2 text-sm">
+            <p className="mt-6 mb-2 text-sm md:text-base">
               <span className="font-semibold">Order Placed:</span>{" "}
               {orderData.createdAt}
             </p>
           </div>
-          <div className="flex justify-center items-center">
+          <div className="flex justify-center items-center mb-8 md:mb-0">
             <Image
               src={require("@/public/deliveryTruck.png")}
               alt="Delivery Truck"

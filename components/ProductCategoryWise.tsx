@@ -23,12 +23,12 @@ const ProductCategoryWise = ({
 }) => {
   return (
     <div className="mb-10">
-      <p className="text-xl font-semibold flex items-center">
+      <p className="md:text-xl font-semibold flex items-center">
         <Zap className="mr-2" />
         {title}
       </p>
       <Separator className="my-4" />
-      <div className="grid grid-cols-5 gap-4">
+      <div className="grid md:grid-cols-5 md:gap-4 grid-cols-2 gap-x-4 gap-y-6">
         {products &&
           products.map((product: Product) => {
             return (

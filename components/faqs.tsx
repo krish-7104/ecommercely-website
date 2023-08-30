@@ -9,11 +9,11 @@ import { HelpCircle } from "lucide-react";
 const Faqs = () => {
   return (
     <div className="mb-10 w-full">
-      <p className="text-xl font-semibold flex items-center">
+      <p className="md:text-xl font-semibold flex items-center">
         <HelpCircle className="mr-2" />
         Frequently Asked Questions
       </p>
-      <div className="mx-auto mt-4">
+      <div className="mt-4">
         <Accordion type="single" collapsible>
           <AccordionItem value="item-1">
             <AccordionTrigger>

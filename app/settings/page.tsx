@@ -7,6 +7,7 @@ import { useSelector } from "react-redux";
 import toast from "react-hot-toast";
 import { Activity } from "lucide-react";
 import { useRouter } from "next/navigation";
+import dateFormaterHandler from "@/helper/DateFormatter";
 const Settings = () => {
   const router = useRouter();
   const [user, setUser] = useState({
@@ -60,8 +61,8 @@ const Settings = () => {
   };
   return (
     <main className="flex w-full justify-center items-center">
-      <section className="w-[80%] my-10">
-        <h2 className="font-bold text-2xl flex items-center">
+      <section className="md:container w-[95%] md:w-[80%] my-10">
+        <h2 className="font-bold text-xl md:text-2xl justify-center md:justify-start flex items-center">
           <Activity className="mr-2" />
           Settings
         </h2>
@@ -69,7 +70,7 @@ const Settings = () => {
           {user.name !== "" && (
             <div className="p-4">
               <div className="flex justify-between items-baseline">
-                <p className="text-xl font-semibold">User Profile</p>
+                <p className="md:text-xl font-semibold">User Profile</p>
                 <Button
                   variant={"outline"}
                   size={"sm"}
@@ -79,13 +80,17 @@ const Settings = () => {
                 </Button>
               </div>
               <div className="border-b pb-4">
-                <p className="my-2">Name: {user.name}</p>
-                <p className="my-2">Email: {user.email}</p>
-                <p className="my-2">Registered On: {user.createdAt}</p>
-                <p className="my-2">Updated On: {user.updatedAt}</p>
+                <p className="my-2 text-sm md:text-base">Name: {user.name}</p>
+                <p className="my-2 text-sm md:text-base">Email: {user.email}</p>
+                <p className="my-2 text-sm md:text-base">
+                  Registered On: {dateFormaterHandler(user.createdAt)}
+                </p>
+                <p className="my-2 text-sm md:text-base">
+                  Updated On: {dateFormaterHandler(user.updatedAt)}
+                </p>
               </div>
               <div className="flex justify-between items-baseline">
-                <p className="text-xl font-semibold mt-4">User Location</p>
+                <p className="md:text-xl font-semibold mt-4">User Location</p>
                 <Button
                   variant={"outline"}
                   size={"sm"}
@@ -95,18 +100,24 @@ const Settings = () => {
                 </Button>
               </div>
               <div className="border-b pb-4">
-                <p className="my-2">Address: {user.address}</p>
-                <p className="my-2">Country: {user.country}</p>
-                <p className="my-2">State: {user.state}</p>
-                <p className="my-2">City: {user.city}</p>
-                <p className="my-2">Pincode: {user.pincode}</p>
+                <p className="my-2 text-sm md:text-base">
+                  Address: {user.address}
+                </p>
+                <p className="my-2 text-sm md:text-base">
+                  Country: {user.country}
+                </p>
+                <p className="my-2 text-sm md:text-base">State: {user.state}</p>
+                <p className="my-2 text-sm md:text-base">City: {user.city}</p>
+                <p className="my-2 text-sm md:text-base">
+                  Pincode: {user.pincode}
+                </p>
               </div>
-              <p className="text-xl font-semibold mt-4">Account Analysis</p>
+              <p className="md:text-xl font-semibold mt-4">Account Analysis</p>
               <div className="border-b pb-4">
-                <p className="my-2">
+                <p className="my-2 text-sm md:text-base">
                   Total Orders: {user?.orders ? user.orders.length : 0}
                 </p>
-                <p className="my-2">
+                <p className="my-2 text-sm md:text-base">
                   Products In Cart:{" "}
                   {user?.carts?.products ? user.carts.products.length : 0}
                 </p>

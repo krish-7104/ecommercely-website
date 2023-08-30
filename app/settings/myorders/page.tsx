@@ -1,4 +1,5 @@
 "use client";
+import dateFormaterHandler from "@/helper/DateFormatter";
 import { InitialState } from "@/redux/types";
 import axios from "axios";
 import { Activity } from "lucide-react";
@@ -38,15 +39,7 @@ const MyOrders = () => {
           userId: userData.id,
         });
         const updatedOrders = data.map((item: OrderData) => {
-          let date = new Date(item.createdAt);
-          const istOffsetMilliseconds = 5.5 * 60 * 60 * 1000;
-          const istTimeMilliseconds =
-            new Date(date).getTime() + istOffsetMilliseconds;
-          const updatedDate = new Date(istTimeMilliseconds).toLocaleString(
-            "en-IN",
-            { timeZone: "Asia/Kolkata" }
-          );
-          item.createdAt = updatedDate.toString();
+          item.createdAt = dateFormaterHandler(item.createdAt);
           return item;
         });
         setOrders(updatedOrders);
@@ -61,8 +54,8 @@ const MyOrders = () => {
 
   return (
     <main className="flex w-full justify-center items-center">
-      <section className="w-[80%] my-10">
-        <h2 className="font-bold text-2xl flex items-center">
+      <section className="md:container w-[90%] md:w-[80%] my-10">
+        <h2 className="font-bold text-xl md:text-2xl flex items-center">
           <Activity className="mr-2" />
           My Orders
         </h2>
@@ -79,7 +72,7 @@ const MyOrders = () => {
                     <p className="text-[#272e3f] inline-block border bg-[#e8e8e8] px-2 py-1 mb-2 text-xs font-medium rounded tracking-wider">
                       {order.status}
                     </p>
-                    <p className="mb-2 text-xs font-medium">
+                    <p className="mb-2 text-xs md:text-sm font-medium">
                       Placed On: {order.createdAt}
                     </p>
                     {orders[index].products.map((item: Product) => {
@@ -88,18 +81,26 @@ const MyOrders = () => {
                           key={item.productId}
                           className="w-full flex justify-evenly items-center my-2"
                         >
-                          <p className="w-3/5 cursor-pointer">{item.name}</p>
-                          <p className="w-1/5">₹{item.price}</p>
-                          <p className="w-1/5">{item.quantity}</p>
+                          <p className="w-3/5 text-xs md:text-base cursor-pointer line-clamp-2">
+                            {item.name}
+                          </p>
+                          <p className="w-1/5 text-sm md:text-base md:text-left text-ce">
+                            ₹{item.price}
+                          </p>
+                          <p className="w-1/5 text-sm md:text-base md:text-left text-ce">
+                            x{item.quantity}
+                          </p>
                         </div>
                       );
                     })}
                     <div className="w-full flex justify-evenly items-center mt-4 border-t pt-2">
-                      <p className="w-3/5 font-semibold">
+                      <p className="w-3/5 font-semibold text-xs md:text-base">
                         Total Price and Quantity
                       </p>
-                      <p className="w-1/5 font-semibold">₹{order.total}</p>
-                      <p className="w-1/5 font-semibold">
+                      <p className="w-1/5 font-semibold text-xs md:text-base">
+                        ₹{order.total}
+                      </p>
+                      <p className="w-1/5 font-semibold text-xs md:text-base">
                         {orders[index].products.reduce(
                           (sum: number, item: Product) => sum + item.quantity,
                           0

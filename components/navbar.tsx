@@ -208,18 +208,18 @@ const Navbar = () => {
   return (
     <div className="border-b w-full bg-white relative shadow-md px-6 py-3 flex justify-between items-center">
       <div
-        className="font-semibold text-xl cursor-pointer flex justify-center items-center"
+        className="font-semibold md:text-xl cursor-pointer flex justify-center items-center"
         onClick={() => router.replace("/")}
       >
-        <Store className="mr-2 h-6 w-6" /> Ecommercely
+        <Store className="mr-2 h-6 w-6 hidden md:block" /> Ecommercely
       </div>
       <div className="flex justify-center items-center">
         <Link href={"/product"}>
-          <Search className="h-6 w-6 mr-5" />
+          <Search className="md:h-6 md:w-6 h-5 w-5 mr-5" />
         </Link>
         <Sheet>
           <SheetTrigger>
-            <ShoppingCart className="h-6 w-6 mr-4" />
+            <ShoppingCart className="md:h-6 md:w-6 h-5 w-5 mr-4" />
           </SheetTrigger>
           <SheetContent>
             <SheetHeader>
@@ -238,7 +238,7 @@ const Navbar = () => {
                           className="border-b mb-4 pb-4"
                         >
                           <p
-                            className="font-medium text-sm cursor-pointer"
+                            className="font-medium text-xs md:text-sm cursor-pointer"
                             onClick={() =>
                               router.push(
                                 `product/${cartData.products[item].productId}`
@@ -247,10 +247,10 @@ const Navbar = () => {
                           >
                             {index + 1}. {cartData.products[item].name}
                           </p>
-                          <div className="flex justify-between items-center w-[90%] mt-3">
+                          <div className="flex justify-between items-center w-[95%] md:w-[90%] mt-3">
                             <div className="flex justify-center items-center bg-slate-200 rounded-md">
                               <button
-                                className="flex justify-center items-center px-2 py-1 cursor-pointer"
+                                className="flex justify-center items-center px-1 md:px-2 py-1 cursor-pointer"
                                 onClick={() =>
                                   decrementCartProduct(
                                     cartData.products[item].productId,
@@ -260,11 +260,11 @@ const Navbar = () => {
                               >
                                 <Minus size={16} className="mx-2" />
                               </button>
-                              <p className="text-sm min-w-[20px] max-w-[20px] text-center">
+                              <p className="text-xs md:text-sm md:min-w-[20px] md:max-w-[20px] text-center">
                                 {cartData.products[item].quantity.toString()}
                               </p>
                               <button
-                                className="flex justify-center items-center px-2 py-1 cursor-pointer"
+                                className="flex justify-center items-center px-1 md:px-2 py-1 cursor-pointer"
                                 onClick={() =>
                                   incrementCartProduct(
                                     cartData.products[item].productId
@@ -274,7 +274,7 @@ const Navbar = () => {
                                 <Plus size={16} className="mx-2" />
                               </button>
                             </div>
-                            <p className="text-sm">
+                            <p className="text-xs md:text-sm">
                               Price: ₹{cartData.products[item].price.toString()}
                             </p>
                             <button

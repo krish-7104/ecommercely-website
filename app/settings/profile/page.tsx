@@ -93,22 +93,24 @@ const Account = () => {
   return (
     <main className="flex w-full justify-center items-center">
       {!loading && (
-        <section className="w-[80%] my-10">
-          <h2 className="font-bold text-2xl flex items-center">
+        <section className="md:container w-[90%] md:w-[80%] my-10">
+          <h2 className="font-bold text-xl md:text-2xl flex items-center">
             <Activity className="mr-2" />
             My Profile
           </h2>
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)}>
-              <p className="font-medium mt-8">User Personal Details</p>
+              <p className="font-medium mt-8 text-base md:text-lg">
+                User Personal Details
+              </p>
               <Separator className="mb-4 mt-2" />
-              <div className="grid grid-cols-2 gap-x-4 gap-y-2">
+              <div className="grid md:grid-cols-2 gap-x-4 gap-y-2">
                 <FormField
                   control={form.control}
                   name="name"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel className="text-slate-800">
+                      <FormLabel className="text-slate-800 text-sm md:text-base">
                         Full Name
                       </FormLabel>
                       <FormControl>
@@ -123,7 +125,7 @@ const Account = () => {
                   name="email"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel className="text-slate-800">
+                      <FormLabel className="text-slate-800 text-sm md:text-base">
                         Email Address
                       </FormLabel>
                       <FormControl>
@@ -138,7 +140,7 @@ const Account = () => {
                   name="phoneno"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel className="text-slate-800">
+                      <FormLabel className="text-slate-800 text-sm md:text-base">
                         Phone Number
                       </FormLabel>
                       <FormControl>
@@ -149,15 +151,19 @@ const Account = () => {
                   )}
                 />
               </div>
-              <p className="font-medium mt-6">User Location Details</p>
+              <p className="font-medium mt-6 text-base md:text-lg">
+                User Location Details
+              </p>
               <Separator className="mb-4 mt-2" />
-              <div className="grid grid-cols-2 gap-x-4 gap-y-2">
+              <div className="grid md:grid-cols-2 gap-x-4 gap-y-2">
                 <FormField
                   control={form.control}
                   name="country"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel className="text-slate-800">Country</FormLabel>
+                      <FormLabel className="text-slate-800 text-sm md:text-base">
+                        Country
+                      </FormLabel>
                       <FormControl>
                         <Input {...field} />
                       </FormControl>
@@ -170,7 +176,9 @@ const Account = () => {
                   name="state"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel className="text-slate-800">State</FormLabel>
+                      <FormLabel className="text-slate-800 text-sm md:text-base">
+                        State
+                      </FormLabel>
                       <FormControl>
                         <Input {...field} />
                       </FormControl>
@@ -183,7 +191,9 @@ const Account = () => {
                   name="city"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel className="text-slate-800">City</FormLabel>
+                      <FormLabel className="text-slate-800 text-sm md:text-base">
+                        City
+                      </FormLabel>
                       <FormControl>
                         <Input {...field} />
                       </FormControl>
@@ -196,7 +206,9 @@ const Account = () => {
                   name="pincode"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel className="text-slate-800">Pincode</FormLabel>
+                      <FormLabel className="text-slate-800 text-sm md:text-base">
+                        Pincode
+                      </FormLabel>
                       <FormControl>
                         <Input {...field} type="number" />
                       </FormControl>
@@ -209,7 +221,9 @@ const Account = () => {
                   name="address"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel className="text-slate-800">Address</FormLabel>
+                      <FormLabel className="text-slate-800 text-sm md:text-base">
+                        Address
+                      </FormLabel>
                       <FormControl>
                         <Textarea {...field} />
                       </FormControl>

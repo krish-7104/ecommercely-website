@@ -1,12 +1,17 @@
 "use client";
 import { Button } from "@/components/ui/button";
 import { setCartData, setOrderData } from "@/redux/actions";
-import { InitialState, OrderProduct, User } from "@/redux/types";
+import { InitialState, OrderProduct } from "@/redux/types";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import { toast } from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
+import { loadStripe } from "@stripe/stripe-js";
+
+const stripePromise = loadStripe(
+  process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY || ""
+);
 
 const Order = () => {
   const router = useRouter();
@@ -42,29 +47,55 @@ const Order = () => {
 
     userData.id && getUserProfile();
   }, [router, userData]);
+
   const placeOrderHandler = async () => {
+    toast.loading("Placing Order...");
     try {
       const { data } = await axios.post("/api/order/addorder", {
         ...orderData,
       });
-      toast.success("Order Placed!");
-      dispatch(setCartData({ products: [], id: "" }));
-      dispatch(setOrderData({ total: 0, userId: "", products: [] }));
-      router.push(`/order/${data.id}`);
+      const stripe = await stripePromise;
+      if (!stripe) {
+        toast.dismiss();
+        toast.error("Stripe initialization failed.");
+        return;
+      }
+      const session = await axios.post("/api/payment/create-session", {
+        orderId: data.id,
+      });
+      const result = await stripe.redirectToCheckout({
+        sessionId: session.data.id,
+      });
+      if (result.error) {
+        toast.dismiss();
+        toast.error("Error in starting payment session.");
+      } else {
+        // await updatePaymentStatusToPaid(data.id);
+        toast.dismiss();
+        toast.success("Payment successful! Order placed.");
+      }
     } catch (error) {
-      toast.error("Error In Buying Product!");
+      toast.dismiss();
+      toast.error("Error in buying product.");
     }
   };
+
   return (
     <section className="w-full">
-      <section className="w-[85%] mx-auto my-6">
+      <section className="md:container w-[85%] mx-auto my-6">
         <div className="my-6">
-          <p className="font-bold text-2xl text-center">Order Details</p>
+          <p className="font-bold text-lg md:text-2xl text-center">
+            Order Details
+          </p>
           <div className="my-8">
             <div className="w-full flex justify-evenly items-center mb-4 border-b pb-2">
-              <p className="w-3/5 font-semibold">Product Name</p>
-              <p className="w-1/5 font-semibold">Price</p>
-              <p className="w-1/5 font-semibold">Quantity</p>
+              <p className="w-3/5 text-sm md:text-base font-semibold">
+                Product Name
+              </p>
+              <p className="w-1/5 text-sm md:text-base font-semibold">Price</p>
+              <p className="w-1/5 text-sm md:text-base font-semibold">
+                Quantity
+              </p>
             </div>
             {orderData &&
               orderData.products.map((item) => {
@@ -73,16 +104,22 @@ const Order = () => {
                     key={item.productId}
                     className="w-full flex justify-evenly items-center my-2"
                   >
-                    <p className="w-3/5">{item.name}</p>
-                    <p className="w-1/5">₹{item.price}</p>
-                    <p className="w-1/5">{item.quantity}</p>
+                    <p className="w-3/5 text-sm md:text-base">{item.name}</p>
+                    <p className="w-1/5 text-sm md:text-base">₹{item.price}</p>
+                    <p className="w-1/5 text-sm md:text-base">
+                      {item.quantity}
+                    </p>
                   </div>
                 );
               })}
             <div className="w-full flex justify-evenly items-center mt-4 border-t pt-2">
-              <p className="w-3/5 font-semibold">Total Price and Quantity</p>
-              <p className="w-1/5 font-semibold">₹{orderData.total}</p>
-              <p className="w-1/5 font-semibold">
+              <p className="w-3/5 text-sm md:text-base font-semibold">
+                Total Price and Quantity
+              </p>
+              <p className="w-1/5 text-sm md:text-base font-semibold">
+                ₹{orderData.total}
+              </p>
+              <p className="w-1/5 text-sm md:text-base font-semibold">
                 {orderData.products.reduce(
                   (sum: number, item: OrderProduct) => sum + item.quantity,
                   0
@@ -92,44 +129,70 @@ const Order = () => {
           </div>
         </div>
         <div className="my-6">
-          <p className="font-bold text-2xl text-center">Personal Information</p>
+          <div className="flex justify-between items-baseline">
+            <p className="md:text-xl font-semibold">Profile Details</p>
+            <Button
+              variant={"outline"}
+              size={"sm"}
+              onClick={() => router.push("/settings/profile")}
+            >
+              Edit Profile
+            </Button>
+          </div>
           <div className="my-8">
             <p className="my-2">
-              <span className="font-medium">Name: </span>
+              <span className="font-medium text-sm md:text-base">Name: </span>
               {userProfile.name}
             </p>
             <p className="my-2">
-              <span className="font-medium">Email: </span>
+              <span className="font-medium text-sm md:text-base">Email: </span>
               {userProfile.email}
             </p>
             <p className="my-2">
-              <span className="font-medium">Phone Number: </span>
+              <span className="font-medium text-sm md:text-base">
+                Phone Number:{" "}
+              </span>
               {userProfile.phoneno}
             </p>
           </div>
           <div className="my-6">
-            <p className="font-bold text-2xl text-center">
-              Location Information
-            </p>
+            <div className="flex justify-between items-baseline">
+              <p className="md:text-xl font-semibold">Location Details</p>
+              <Button
+                variant={"outline"}
+                size={"sm"}
+                onClick={() => router.push("/settings/profile")}
+              >
+                Edit Profile
+              </Button>
+            </div>
             <div className="my-8">
               <p className="my-2">
-                <span className="font-medium">Address: </span>
+                <span className="font-medium text-sm md:text-base">
+                  Address:{" "}
+                </span>
                 {userProfile.address}
               </p>
               <p className="my-2">
-                <span className="font-medium">Country: </span>
+                <span className="font-medium text-sm md:text-base">
+                  Country:{" "}
+                </span>
                 {userProfile.country}
               </p>
               <p className="my-2">
-                <span className="font-medium">State: </span>
+                <span className="font-medium text-sm md:text-base">
+                  State:{" "}
+                </span>
                 {userProfile.state}
               </p>
               <p className="my-2">
-                <span className="font-medium">City: </span>
+                <span className="font-medium text-sm md:text-base">City: </span>
                 {userProfile.city}
               </p>
               <p className="my-2">
-                <span className="font-medium">Pincode: </span>
+                <span className="font-medium text-sm md:text-base">
+                  Pincode:{" "}
+                </span>
                 {userProfile.pincode}
               </p>
             </div>
@@ -138,10 +201,10 @@ const Order = () => {
         <div className="flex justify-center items-center my-6">
           <Button
             size={"lg"}
-            className="text-lg px-10 py-4"
+            className="md:text-lg px-10 py-4"
             onClick={placeOrderHandler}
           >
-            Place Order
+            Make Payment
           </Button>
         </div>
       </section>

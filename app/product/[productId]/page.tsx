@@ -246,20 +246,24 @@ const Product = () => {
   return (
     <main className="min-h-[100vh] w-full flex bg-[#f6f9fc] flex-col items-center">
       {!loading && product && (
-        <section className="w-[90%] my-6 flex justify-between items-start container">
+        <section className="w-full md:w-[90%] my-6 flex justify-between items-start container flex-col md:flex-row">
           <Image
             src={product.image}
             alt="product"
             width={450}
             height={300}
-            className="mr-10 w-[30%] max-h-[60vh] object-contain"
+            className="md:mr-10 w-[90%] md:w-[30%] max-h-[40vh] md:max-h-[60vh] object-contain"
           />
-          <div className="w-[70%]">
-            <p className="font-semibold text-2xl mb-2">
+          <div className="w-full md:w-[70%]">
+            <p className="font-semibold text-lg md:text-2xl mb-2 mt-4 md:mt-0">
               {product.product_name}
             </p>
-            <p className="mb-4">{product.product_description}</p>
-            <p className="font-semibold text-xl mb-4">₹{product.price}</p>
+            <p className="mb-4 text-sm md:text-base">
+              {product.product_description}
+            </p>
+            <p className="font-semibold text-base md:text-xl mb-4">
+              ₹{product.price}
+            </p>
             {product.quantity <= 0 && (
               <p className="font-semibold text-red-500 text-lg mb-4">
                 Product Out Of Stock

@@ -34,9 +34,9 @@ const ResetPassword = () => {
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     toast.loading("Initiating Password Reset..");
     try {
-      const resp = await axios.post("/api/auth/forget", { values });
+      const resp = await axios.post("/api/auth/forget", values);
       toast.dismiss();
-      toast.success("Password Reset Link Send On Your Email");
+      toast.success(resp.data);
     } catch (error: any) {
       toast.dismiss();
       toast.error(error.response.data);
@@ -44,8 +44,10 @@ const ResetPassword = () => {
   };
   return (
     <section className="relative bg-[#f6f9fc] flex justify-center items-center h-[88vh] w-full">
-      <div className="w-[35%] bg-white shadow-lg border rounded-md px-7 py-5">
-        <p className="text-xl font-semibold text-center mb-6">Reset Password</p>
+      <div className="md:container w-[90%] md:w-[35%] bg-white shadow-lg border rounded-md px-7 py-5">
+        <p className="md:text-xl font-semibold text-center mb-6">
+          Reset Password
+        </p>
         <Form {...form}>
           <form
             onSubmit={form.handleSubmit(onSubmit)}

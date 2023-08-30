@@ -23,7 +23,7 @@ const ForgetPassword = () => {
       try {
         await axios.get("/api/auth/logout");
       } catch (error: any) {
-        toast.error(error.message);
+        toast.error(error.response.data);
       }
     };
     logoutHandler();
@@ -51,10 +51,13 @@ const ForgetPassword = () => {
         });
         toast.success("Updated Successfull");
         toast.dismiss();
-        router.replace("/");
+        toast.loading("Redirecting...");
+        setTimeout(() => {
+          router.replace("/");
+        }, 1000);
       } catch (error: any) {
         toast.dismiss();
-        toast.error(error.message);
+        toast.error(error.response.data);
       }
     } else {
       toast.error("Both Password Are Different!");
