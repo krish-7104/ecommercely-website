@@ -10,7 +10,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { CartProduct, Order } from "@/redux/types";
 import { Minus, Plus } from "lucide-react";
 import { Oval } from "react-loader-spinner";
-import Featured from "../(components)/Featured";
+import Featured from "@/app/product/(components)/Featured";
 import { stockDecreasehandler } from "@/helper/stockDecrease";
 
 interface Product {
