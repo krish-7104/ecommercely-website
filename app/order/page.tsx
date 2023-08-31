@@ -1,12 +1,19 @@
 "use client";
+import StripePaymentForm from "@/components/StripeForm";
 import { Button } from "@/components/ui/button";
-import { setCartData, setOrderData } from "@/redux/actions";
+import { setCartData } from "@/redux/actions";
 import { InitialState, OrderProduct } from "@/redux/types";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import { toast } from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
+import { Elements } from "@stripe/react-stripe-js";
+import { loadStripe } from "@stripe/stripe-js";
+
+const stripePromise = loadStripe(
+  process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY || ""
+);
 
 const Order = () => {
   const router = useRouter();
@@ -28,6 +35,7 @@ const Order = () => {
       router.replace("/");
     }
   }, [orderData.products.length, router]);
+
   useEffect(() => {
     const getUserProfile = async () => {
       const resp = await axios.post("/api/profile/get", {
@@ -42,19 +50,6 @@ const Order = () => {
 
     userData.id && getUserProfile();
   }, [router, userData]);
-
-  const placeOrderHandler = async () => {
-    try {
-      const { data } = await axios.post("/api/order/addorder", {
-        ...orderData,
-      });
-      toast.success("Order Placed!");
-      dispatch(setCartData({ products: [], id: "" }));
-      router.push(`/order/${data.id}`);
-    } catch (error) {
-      toast.error("Error In Buying Product!");
-    }
-  };
 
   return (
     <section className="w-full">
@@ -174,15 +169,17 @@ const Order = () => {
             </div>
           </div>
         </div>
-        <div className="flex justify-center items-center my-6">
-          <Button
-            size={"lg"}
-            className="md:text-lg px-10 py-4"
-            onClick={placeOrderHandler}
-          >
-            Place Order
-          </Button>
-        </div>
+        <p className="md:text-xl font-semibold">Payment Details</p>
+        <Elements stripe={stripePromise}>
+          <StripePaymentForm
+            orderData={orderData}
+            customerName={userData.name}
+          />
+        </Elements>
+        <p className="my-5 text-center font-medium">
+          Note: For Testing Purpose Add Card No: 4242 4242 4242 4242 and rest
+          all details randomly.
+        </p>
       </section>
     </section>
   );

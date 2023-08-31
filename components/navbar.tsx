@@ -75,10 +75,10 @@ const Navbar = () => {
       quantity: 1,
       type: "dec",
     });
-    const existingCartItemIndex = cartData.products.findIndex(
+    const existingCartItemIndex = cartData?.products.findIndex(
       (item: CartProduct) => item.productId === id
     );
-    const updatedCart = cartData.products.map(
+    const updatedCart = cartData?.products.map(
       (product: CartProduct, index: number) =>
         index === existingCartItemIndex
           ? { ...product, quantity: Number(product.quantity) + 1 }
@@ -97,11 +97,11 @@ const Navbar = () => {
       quantity: 1,
       type: "inc",
     });
-    const existingCartItemIndex = cartData.products.findIndex(
+    const existingCartItemIndex = cartData?.products.findIndex(
       (item: CartProduct) => item.productId === id
     );
     if (quantity === 1) {
-      const updatedProducts = cartData.products.filter(
+      const updatedProducts = cartData?.products.filter(
         (item: CartProduct) => item.productId !== id
       );
 
@@ -114,13 +114,13 @@ const Navbar = () => {
 
       const sendData = {
         id: cartData.id,
-        products: cartData.products.filter(
+        products: cartData?.products.filter(
           (item: CartProduct) => item.productId !== id
         ),
       };
       updateCartInDatabase(sendData);
     } else {
-      let updatedCart = cartData.products.map(
+      let updatedCart = cartData?.products.map(
         (item: CartProduct, index: number) =>
           index === existingCartItemIndex
             ? { ...item, quantity: Number(item.quantity) - 1 }
@@ -138,13 +138,13 @@ const Navbar = () => {
   const removeProductFromCartHandler = (id: string) => {
     const sendData = {
       id: cartData.id,
-      products: cartData.products.filter(
+      products: cartData?.products.filter(
         (item: CartProduct) => item.productId !== id
       ),
     };
-    let index = cartData.products.findIndex((item) => item.productId === id);
+    let index = cartData?.products.findIndex((item) => item.productId === id);
     stockDecreasehandler(id, {
-      quantity: cartData.products[index].quantity,
+      quantity: cartData?.products[index].quantity,
       type: "inc",
     });
     dispatch(setCartData(sendData));
@@ -160,7 +160,7 @@ const Navbar = () => {
       category: string;
     }[] = [];
     let total: number = 0;
-    cartData.products.map((item: any) => {
+    cartData?.products.map((item: any) => {
       productsData.push({
         name: item.name,
         price: item?.price,
@@ -185,7 +185,7 @@ const Navbar = () => {
       id: cartData.id,
       products: [],
     };
-    cartData.products.forEach((item) => {
+    cartData?.products.forEach((item) => {
       productsToRestore.push({
         productId: item.productId,
         quantity: item.quantity,
@@ -228,24 +228,24 @@ const Navbar = () => {
                 Here are all the products you add to your cart.
               </SheetDescription>
               <div className="w-full pt-4">
-                {cartData.products &&
-                Object.keys(cartData.products).length > 0 ? (
+                {cartData?.products &&
+                Object.keys(cartData?.products).length > 0 ? (
                   <div>
-                    {Object.keys(cartData.products).map(
+                    {Object.keys(cartData?.products).map(
                       (item: any, index: number) => (
                         <div
-                          key={cartData.products[item].productId!}
+                          key={cartData?.products[item]?.productId!}
                           className="border-b mb-4 pb-4"
                         >
                           <p
                             className="font-medium text-xs md:text-sm cursor-pointer"
                             onClick={() =>
                               router.push(
-                                `product/${cartData.products[item].productId}`
+                                `product/${cartData?.products[item]?.productId}`
                               )
                             }
                           >
-                            {index + 1}. {cartData.products[item].name}
+                            {index + 1}. {cartData?.products[item]?.name}
                           </p>
                           <div className="flex justify-between items-center w-[95%] md:w-[90%] mt-3">
                             <div className="flex justify-center items-center bg-slate-200 rounded-md">
@@ -253,21 +253,21 @@ const Navbar = () => {
                                 className="flex justify-center items-center px-1 md:px-2 py-1 cursor-pointer"
                                 onClick={() =>
                                   decrementCartProduct(
-                                    cartData.products[item].productId,
-                                    cartData.products[item].quantity
+                                    cartData?.products[item]?.productId,
+                                    cartData?.products[item]?.quantity
                                   )
                                 }
                               >
                                 <Minus size={16} className="mx-2" />
                               </button>
                               <p className="text-xs md:text-sm md:min-w-[20px] md:max-w-[20px] text-center">
-                                {cartData.products[item].quantity.toString()}
+                                {cartData?.products[item]?.quantity?.toString()}
                               </p>
                               <button
                                 className="flex justify-center items-center px-1 md:px-2 py-1 cursor-pointer"
                                 onClick={() =>
                                   incrementCartProduct(
-                                    cartData.products[item].productId
+                                    cartData?.products[item]?.productId
                                   )
                                 }
                               >
@@ -275,13 +275,14 @@ const Navbar = () => {
                               </button>
                             </div>
                             <p className="text-xs md:text-sm">
-                              Price: ₹{cartData.products[item].price.toString()}
+                              Price: ₹
+                              {cartData?.products[item]?.price.toString()}
                             </p>
                             <button
                               className="flex justify-center items-center px-2 py-1 cursor-pointer"
                               onClick={() =>
                                 removeProductFromCartHandler(
-                                  cartData.products[item].productId
+                                  cartData?.products[item]?.productId
                                 )
                               }
                             >
@@ -323,8 +324,8 @@ const Navbar = () => {
                 <Avatar className="cursor-pointer select-none">
                   {userData.name !== "" && (
                     <AvatarFallback>
-                      {userData?.name?.split(" ")[0].slice(0, 1)}
-                      {userData?.name?.split(" ")[1].slice(0, 1)}
+                      {userData?.name?.split(" ")[0]?.slice(0, 1)}
+                      {userData?.name?.split(" ")[1]?.slice(0, 1)}
                     </AvatarFallback>
                   )}
                 </Avatar>
