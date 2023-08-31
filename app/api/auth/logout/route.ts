@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 
-export async function POST(req: Request) {
+export async function GET(req: Request) {
   try {
     const response = new NextResponse("Logout successful");
     response.headers.set(
