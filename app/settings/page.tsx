@@ -53,6 +53,7 @@ const Settings = () => {
     try {
       await axios.get("/api/auth/logout");
       toast.dismiss();
+      router.replace("/");
       toast.success("Logout Successfull");
     } catch (error: any) {
       toast.dismiss();
