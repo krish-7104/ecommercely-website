@@ -65,7 +65,8 @@ const ForgetPassword = () => {
   };
   return (
     <section className="relative bg-[#f6f9fc] flex justify-center items-center h-[88vh] w-full">
-      <div className="w-[35%] bg-white shadow-lg border rounded-md px-7 py-5">
+      <div className="md:container w-[90%] md:w-[35%] bg-white shadow-lg border rounded-md px-7 py-5">
+        {" "}
         <p className="text-xl font-semibold text-center mb-6">
           Update Password - Ecommercely
         </p>

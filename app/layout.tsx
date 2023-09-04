@@ -4,6 +4,7 @@ import type { Metadata } from "next";
 import { Montserrat } from "next/font/google";
 import { Toaster } from "react-hot-toast";
 import { Providers } from "@/redux/provider";
+import Footer from "@/components/footer";
 const montserrat = Montserrat({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
@@ -23,6 +24,7 @@ export default function RootLayout({
           <Navbar />
           {children}
           <Toaster position="bottom-right" />
+          <Footer />
         </Providers>
       </body>
     </html>
