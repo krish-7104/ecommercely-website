@@ -46,11 +46,22 @@ const Navbar = () => {
             id: resp.data.user.userId,
           })
         );
-      } catch (error) {}
+      } catch (error) {
+        logoutHandler();
+      }
     };
 
     getUserTokenData();
   }, [dispatch]);
+
+  const logoutHandler = async () => {
+    try {
+      await axios.get("/api/auth/logout");
+      toast.dismiss();
+    } catch (error: any) {
+      toast.dismiss();
+    }
+  };
 
   useEffect(() => {
     const getCartDataFromDB = async () => {
