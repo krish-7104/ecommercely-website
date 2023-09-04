@@ -5,7 +5,7 @@ export async function GET(req: Request) {
     const response = new NextResponse("Logout successful");
     response.headers.set(
       "Set-Cookie",
-      `token=; HttpOnly; Path=/; Expires=${new Date(0).toUTCString()}`
+      `token=; HttpOnly; Path=/; Expires=${new Date(0).toISOString()}`
     );
     return response;
   } catch (error) {
