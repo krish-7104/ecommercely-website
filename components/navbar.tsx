@@ -1,7 +1,7 @@
 "use client";
 import { Store, ShoppingCart, Search, Minus, Plus, Trash } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import {
   Sheet,

@@ -1,14 +1,9 @@
 import { NextResponse } from "next/server";
-
+import { cookies } from "next/headers";
 export async function GET(req: Request) {
   try {
     const response = new NextResponse("Logout successful");
-    const expirationDate = new Date();
-    expirationDate.setFullYear(expirationDate.getFullYear() - 1);
-    response.headers.set(
-      "Set-Cookie",
-      `token=; HttpOnly; Path=/; Expires=${expirationDate.toUTCString()}`
-    );
+    cookies().delete("token");
     return response;
   } catch (error) {
     console.log(error);
