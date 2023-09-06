@@ -7,7 +7,7 @@ import { toast } from "react-hot-toast";
 import { Button } from "@/components/ui/button";
 import { setCartData, setOrderData } from "@/redux/actions";
 import { useDispatch, useSelector } from "react-redux";
-import { CartProduct, Order } from "@/redux/types";
+import { CartProduct, InitialState, Order } from "@/redux/types";
 import { Minus, Plus } from "lucide-react";
 import { Oval } from "react-loader-spinner";
 import { stockDecreasehandler } from "@/helper/stockDecrease";
@@ -26,30 +26,29 @@ interface Product {
 const Product = () => {
   const router = useRouter();
   const params = useParams();
-  const [product, setProduct] = useState<Product | undefined>();
-  const [loading, setLoading] = useState(true);
   const dispatch = useDispatch();
-  const cartData = useSelector((state: any) => state.cart);
-  const userData = useSelector((state: any) => state.userData);
+  const cartData = useSelector((state: InitialState) => state.cart);
+  const userData = useSelector((state: InitialState) => state.userData);
+  const [product, setProduct] = useState<Product | null>(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const getData = async (): Promise<void> => {
+    const fetchData = async () => {
       try {
-        const resp = await axios.post(
+        const response = await axios.post(
           `/api/product/getproducts/${params.productId}`
         );
-        setProduct(resp.data);
+        setProduct(response.data);
         setLoading(false);
         toast.dismiss();
-      } catch (error: any) {
-        setProduct(undefined);
+      } catch (error) {
+        setProduct(null);
         setLoading(false);
-        toast.dismiss();
         toast.error("Something Went Wrong!");
       }
     };
     if (loading) {
-      getData();
+      fetchData();
     }
   }, [loading, params.productId]);
 
@@ -67,7 +66,7 @@ const Product = () => {
     try {
       await axios.post(`/api/cart/update/${cartData.id}`, data);
     } catch (error) {
-      toast.error("Error In Saving Cart!");
+      toast.error("Error updating cart!");
     }
   };
 
@@ -84,82 +83,92 @@ const Product = () => {
         })
       );
     } catch (error) {
-      toast.error("Error In Saving Cart!");
+      toast.error("Error creating cart!");
     }
   };
 
   const incrementCartProduct = (productId: string) => {
-    if (userData.id) {
-      const existingCartItemIndex = cartData.products.findIndex(
-        (item: CartProduct) => item.productId === productId
-      );
-      stockDecreasehandler(productId, {
-        quantity: 1,
-        type: "dec",
-      });
-      const updatedProduct: Product = {
-        ...product!,
-        quantity: product!.quantity - 1,
-      };
-
-      setProduct(updatedProduct);
-      let updatedCart;
-      if (existingCartItemIndex === -1) {
-        const newCartItem: CartProduct = {
-          productId: product!.id,
-          quantity: 1,
-          name: product!.product_name,
-          price: product!.price,
-          category: product!.category,
-        };
-
-        updatedCart = [...cartData.products, newCartItem];
-      } else {
-        updatedCart = cartData.products.map(
-          (item: CartProduct, index: number) =>
-            index === existingCartItemIndex
-              ? { ...item, quantity: Number(item.quantity) + 1 }
-              : item
-        );
-      }
-      const updatedData = {
-        id: cartData.id,
-        products: updatedCart,
-      };
-      if (cartData.id) {
-        updateCartInDatabase(updatedData);
-      } else {
-        createCartInDatabase({
-          products: updatedCart,
-          userId: userData.id,
-        });
-      }
-      dispatch(setCartData(updatedData));
-    } else {
+    if (!userData.id) {
       logoutHandler();
-      toast.loading("Redirecting...");
-      router.push("/login");
-      toast.dismiss();
+      return;
     }
+
+    const existingCartItemIndex = cartData.products.findIndex(
+      (item: CartProduct) => item.productId === productId
+    );
+
+    stockDecreasehandler(productId, {
+      quantity: 1,
+      type: "dec",
+    });
+
+    const updatedProduct: Product = {
+      ...product!,
+      quantity: product!.quantity - 1,
+    };
+
+    setProduct(updatedProduct);
+
+    let updatedCart;
+
+    if (existingCartItemIndex === -1) {
+      const newCartItem: CartProduct = {
+        productId: product!.id,
+        quantity: 1,
+        name: product!.product_name,
+        price: product!.price,
+        category: product!.category,
+      };
+
+      updatedCart = [...cartData.products, newCartItem];
+    } else {
+      updatedCart = cartData.products.map((item: CartProduct, index: number) =>
+        index === existingCartItemIndex
+          ? { ...item, quantity: Number(item.quantity) + 1 }
+          : item
+      );
+    }
+
+    const updatedData = {
+      id: cartData.id,
+      products: updatedCart,
+    };
+
+    if (cartData.id) {
+      updateCartInDatabase(updatedData);
+    } else {
+      createCartInDatabase({
+        products: updatedCart,
+        userId: userData.id,
+      });
+    }
+
+    dispatch(setCartData(updatedData));
   };
+
   const decrementCartProduct = (productId: string) => {
     const existingCartItemIndex = cartData.products.findIndex(
       (item: CartProduct) => item.productId === productId
     );
+
     stockDecreasehandler(productId, {
       quantity: 1,
       type: "inc",
     });
+
     const updatedProduct: Product = {
       ...product!,
       quantity: product!.quantity + 1,
     };
 
     setProduct(updatedProduct);
+
     if (existingCartItemIndex === -1) {
       return;
     }
+
     let updatedCart;
+
     if (cartData.products[existingCartItemIndex].quantity === 1) {
       updatedCart = cartData.products.filter(
         (item: CartProduct) => item.productId !== productId
@@ -182,56 +191,69 @@ const Product = () => {
   };
 
   const buyProductHandler = async () => {
-    if (userData.id !== "") {
-      const newCartItem: CartProduct = {
-        productId: product!.id,
-        quantity: 1,
-        name: product!.product_name,
-        price: product!.price,
-        category: product!.category,
-      };
-      const updatedProduct: Product = {
-        ...product!,
-        quantity: product!.quantity - 1,
-      };
-
-      setProduct(updatedProduct);
-      let updatedCart;
-      updatedCart = [newCartItem];
-      const updatedData = {
-        id: cartData.id,
-        products: updatedCart,
-      };
-      if (cartData.id) {
-        updateCartInDatabase(updatedData);
-      } else {
-        createCartInDatabase({
-          products: updatedCart,
-          userId: userData.id,
-        });
-      }
-      dispatch(setCartData(updatedData));
-      let orderData: Order = {
-        userId: userData.id,
-        total: product!.price,
-        products: [
-          {
-            productId: product!.id,
-            quantity: 1,
-            name: product!.product_name,
-            price: product!.price,
-            category: product!.category,
-          },
-        ],
-      };
-      dispatch(setOrderData(orderData));
-      router.push("/order");
-    } else {
+    if (!userData.id || !product) {
       logoutHandler();
-      toast.loading("Redirecting...");
-      router.push("/login");
-      toast.dismiss();
+      return;
     }
+
+    const newCartItem: CartProduct = {
+      productId: product.id,
+      quantity: 1,
+      name: product.product_name,
+      price: product.price,
+      category: product.category,
+    };
+
+    const updatedProduct: Product = {
+      ...product,
+      quantity: (product.quantity || 0) - 1,
+    };
+
+    setProduct(updatedProduct);
+
+    try {
+      await axios.post(`/api/product/updateproduct/${product.id}`, {
+        quantity: 1,
+        type: "dec",
+      });
+    } catch (error) {
+      toast.error("Error updating product quantity in the database!");
+    }
+
+    const updatedCart = [newCartItem];
+
+    const updatedData = {
+      id: cartData.id,
+      products: updatedCart,
+    };
+
+    if (cartData.id) {
+      updateCartInDatabase(updatedData);
+    } else {
+      createCartInDatabase({
+        products: updatedCart,
+        userId: userData.id,
+      });
+    }
+
+    dispatch(setCartData(updatedData));
+
+    const orderData: Order = {
+      userId: userData.id,
+      total: product.price,
+      products: [
+        {
+          productId: product.id,
+          quantity: 1,
+          name: product.product_name,
+          price: product.price,
+          category: product.category,
+        },
+      ],
+    };
+
+    dispatch(setOrderData(orderData));
+    router.push("/order");
   };
 
   const logoutHandler = async () => {

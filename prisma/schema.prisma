@@ -8,30 +8,31 @@ datasource db {
 }
 
 model AdminUser {
-  id        String   @id @default(uuid())
-  name      String   @unique
-  email     String   @unique
-  password  String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  Logs      Logs[]
+  id              String           @id @default(uuid())
+  name            String           @unique
+  email           String           @unique
+  password        String
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+  Logs            Logs[]
+  resetTokenAdmin resetTokenAdmin?
 }
 
 model User {
-  id        String   @id @default(uuid())
-  name      String
-  email     String   @unique
-  password  String
-  phoneno   String?  @unique
-  address   String?
-  pincode   Int?
-  state     String?
-  city      String?
-  country   String?
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  carts     Cart?
-  orders    Order[]
+  id         String      @id @default(uuid())
+  name       String
+  email      String      @unique
+  password   String
+  phoneno    String?     @unique
+  address    String?
+  pincode    Int?
+  state      String?
+  city       String?
+  country    String?
+  createdAt  DateTime    @default(now())
+  updatedAt  DateTime    @updatedAt
+  carts      Cart?
+  orders     Order[]
   resetToken resetToken?
 }
 
@@ -79,7 +80,7 @@ model Order {
 }
 
 model Logs {
-  id        String   @id @default(uuid())
+  id        String    @id @default(uuid())
   type      String
   message   String
   createdAt DateTime  @default(now())
@@ -90,7 +91,15 @@ model Logs {
 model resetToken {
   id        String   @id @default(uuid())
   userId    String   @unique
-  user      User     @relation(fields: [userId], references: [id])
   token     String
   expiresAt DateTime
+  user      User     @relation(fields: [userId], references: [id])
+}
+
+model resetTokenAdmin {
+  id        String    @id
+  userId    String    @unique
+  token     String
+  expiresAt DateTime
+  AdminUser AdminUser @relation(fields: [userId], references: [id])
 }
