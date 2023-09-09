@@ -58,10 +58,7 @@ const StripePaymentForm = ({
           paymentMethodId: paymentMethod?.id,
           amount: orderData.total * 100,
         });
-
-        toast.dismiss();
         setIsLoading(false);
-
         const { data } = await axios.post("/api/order/addorder", {
           ...orderData,
         });
@@ -70,8 +67,8 @@ const StripePaymentForm = ({
           products: [],
         };
         await axios.post(`/api/cart/update/${cartData.id}`, sendData);
-        toast.dismiss();
         dispatch(setCartData({ products: [], id: "" }));
+        toast.dismiss();
         toast.success("Order Placed!");
         router.push(`/order/${data.id}`);
       } catch (error) {
