@@ -1,10 +1,11 @@
 import { setCartData } from "@/redux/actions";
+import { InitialState } from "@/redux/types";
 import { CardElement, useStripe, useElements } from "@stripe/react-stripe-js";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import { FormEvent, useState } from "react";
 import { toast } from "react-hot-toast";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 const StripePaymentForm = ({
   orderData,
@@ -19,7 +20,7 @@ const StripePaymentForm = ({
   const [isLoading, setIsLoading] = useState(false);
   const [paymentError, setPaymentError] = useState<string | null>(null);
   const router = useRouter();
-
+  const cartData = useSelector((state: InitialState) => state.cart);
   const handleSubmit = async (event: FormEvent) => {
     event.preventDefault();
     toast.loading("Processing Payment..");
@@ -64,9 +65,14 @@ const StripePaymentForm = ({
         const { data } = await axios.post("/api/order/addorder", {
           ...orderData,
         });
+        const sendData = {
+          id: cartData.id,
+          products: [],
+        };
+        await axios.post(`/api/cart/update/${cartData.id}`, sendData);
         toast.dismiss();
-        toast.success("Order Placed!");
         dispatch(setCartData({ products: [], id: "" }));
+        toast.success("Order Placed!");
         router.push(`/order/${data.id}`);
       } catch (error) {
         console.error("Server error:", error);
