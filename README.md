@@ -26,6 +26,7 @@ Ecommercely is a straightforward e-commerce project that illustrates the creatio
 
 https://ecommercely.vercel.app
 
+Video Link: https://youtu.be/lvctTqk8i2E
 
 ## Environment Variables
 
