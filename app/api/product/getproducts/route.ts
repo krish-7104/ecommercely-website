@@ -3,6 +3,7 @@ import { NextResponse } from "next/server";
 
 export async function POST(req: Request) {
   try {
+    console.log(req.url);
     const product = await prismadb.product.findMany({
       include: {
         Category: true,
