@@ -31,9 +31,15 @@ const ProductCategoryWise = ({
       <div className="grid md:grid-cols-5 md:gap-4 grid-cols-2 gap-x-4 gap-y-6">
         {products &&
           products.map((product: Product) => {
-            return (
-              <ProductCard key={product.id} product={product} feature={true} />
-            );
+            if (product.visible) {
+              return (
+                <ProductCard
+                  key={product.id}
+                  product={product}
+                  feature={true}
+                />
+              );
+            }
           })}
       </div>
     </div>

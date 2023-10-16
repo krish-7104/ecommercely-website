@@ -92,7 +92,6 @@ const Products = () => {
           onChange={(e) => setSearch(e.target.value)}
           className="border-2 mr-2 focus-visible:ring-0 ring-0 text-xs md:text-base relative w-[85%] md:w-[40%]"
         />
-
         <DropdownMenu>
           <DropdownMenuTrigger>
             <Filter />
