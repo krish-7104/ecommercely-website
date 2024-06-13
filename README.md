@@ -28,6 +28,8 @@ https://ecommercely.vercel.app
 
 Video Link: https://youtu.be/lvctTqk8i2E
 
+Admin Panel Github: https://github.com/krish-7104/ecommercely-admin
+
 ## Environment Variables
 
 To run this project, you will need to add the following environment variables to your .env file
